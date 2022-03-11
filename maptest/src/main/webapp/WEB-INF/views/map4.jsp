@@ -64,7 +64,7 @@
 <div class="container">
 	<h3>Map</h3>
 	<hr/>
-	<form action="write" method="POST">
+	<form action="/" method="POST" id="frm">
 		<div class="input-group mb-3 input-group-sm">	<!-- input과 도움말을 묶는 클래스, input-group-sm/lg 도움말 사이즈 -->
 			<div class="input-group-prepend">	<!-- 도움말 위치 표시 클래스 -->
 				<span class="input-group-text">제목</span> <!-- 도움말 내용 표시 클래스 -->
@@ -81,11 +81,7 @@
 		<input type="text" id="placeName2" name="placeName2" value="" style="width:400px"><br/>
 		<input type="text" id="latitude" name="latitude" value="" style="width:400px"><br/>
 		<input type="text" id="longitude" name="longitude" value="" style="width:400px">
-		<a href="list">
-			<button type="submit" class="btn btn-primary" style="float: right;">
-				입력
-			</button>
-		</a>
+		<button type="submit" id="submit" class="btn btn-primary" style="float: right;">입력</button>
 	</form>
 
 	<div class="map_wrap">
@@ -107,6 +103,50 @@
 </div>
 
 <script>
+$(document).ready(function(){
+	$("#submit").click(function(event){
+		event.preventDefault(); //원래 form의 기능인 submit를 ajax로 처리
+		
+		var frm = $('#frm');
+		var title = $('#title').val();
+		var content = $('#content').val();
+		var placeName = $('#placeName').val();
+		var placeName2 = $('#placeName2').val();
+		var latitude = $('#latitude').val();
+		var longitude = $('#longitude').val();
+		
+		// 선택한 값을 json 형태 자료로 생성
+		var json = {
+				title : title,
+				content : content,
+				placeName : placeName,
+				placeName2 : placeName2,
+				latitude : latitude,
+				longitude : longitude
+		};
+		
+		// ajax로 json 객체를 controller로 보내서 db 추가
+		$.ajax({
+			type : $("#frm1").attr("method"),
+			url : $("#frm1").attr("action"),
+			data : $("#frm1").serialize(),
+			success : function(data){	//모달창을 이용하여 가입결과를 출력
+					$(".modal-body").text("작성완료");
+					//$("#modalBtn")[0].click(); //자동클릭
+					$("#modalBtn").trigger("click"); //자동클릭
+					$("#closeBtn").click(function(event){
+						event.preventDefault();
+						location.href="map4"; //페이지 이동
+					});			
+			},
+			error : function(){
+				$(".modal-body").text("작성실패");
+				//$("#modalBtn")[0].click();
+				$("#modalBtn").trigger("click");
+			}
+		});
+	});
+});
 // 마커를 담을 배열입니다
 var markers = [];
 
@@ -336,13 +376,34 @@ function displayInfowindow(marker, title) {
 
  	// 클릭한 위도, 경도 정보를 가져옵니다
     var latlng = marker.latLng;
-    	
-    $('#latitude').val(marker.getPosition().getLat());
-    $('#longitude').val(marker.getPosition().getLng());
+ 	$('#latitude').val(marker.getPosition().getLat());
+    $('#longitude').val(marker.getPosition().getLng()); 
+    
+/* 			$("#btn1").on('click', function(){
+				alert("좌표 전송");
+				$.ajax({
+					url : "home",
+					type : "post",
+					data :{
+						latitude : $('#latitude').val(),
+						longitude : $('#longitude').val(),
+					},
+					contentType : "application/json; charset=utf-8;",
+					dataType : "json",
+					success : function(data){
+						alert('성공');
+					},
+					error : function(){
+						alert("장소를 다시 선택해 주세요.");
+					}
+				});
+			});  */
+    
    
     infowindow.setContent(content);
     infowindow.open(map, marker);
 }
+
 
  // 검색결과 목록의 자식 Element를 제거하는 함수입니다
 function removeAllChildNods(el) {   
@@ -351,18 +412,42 @@ function removeAllChildNods(el) {
     }
 }
  
-kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
+/* kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
 	// 클릭한 위도, 경도 정보를 가져옵니다 
     var latlng = mouseEvent.latLng; 
 
     // 마커 위치를 클릭한 위치로 옮깁니다
     marker.setPosition(latlng);
     
-    $('#latitude').val(latlng.getLat());
-    $('#longitude').val(latlng.getLng());
+ 	$(document).ready(function(){
+ 		$("#btn1").on('click', function(){
+ 			var form = {
+ 				latitude : $('#latitude').val(marker.getPosition().getLat());
+ 				longitude : $('#longitude').val(marker.getPosition().getLng());
+ 			};
+ 			$.ajax({
+ 				url : "write",
+ 				type : "POST",
+ 				data : JSON.stringify(form),
+ 				contentType : "application/json; charset=utf-8;",
+ 				dataType : "json"
+ 				success : function(data){
+ 					var lat = data.latitude;
+ 					var lon = data.longitude;
+ 					$('#latitude').text(lat);
+ 					$('#longitude').text(lon);
+ 				},
+ 				error : function(){
+ 					alert("장소를 다시 선택해 주세요.");
+ 				}
+ 			});
+ 		});
+ 	}); */
+/*     $('#latitude').val(latlng.getLat());
+    $('#longitude').val(latlng.getLng()); */
     
  	// 지도를 클릭했을 때 클릭 위치 좌표에 대한 주소정보를 표시하도록 이벤트를 등록합니다
-    searchDetailAddrFromCoords(mouseEvent.latLng, function(result, status) {
+/*     searchDetailAddrFromCoords(mouseEvent.latLng, function(result, status) {
         if (status === kakao.maps.services.Status.OK) {
             var detailAddr = !!result[0].road_address ? '<div>도로명주소 : ' + result[0].road_address.address_name + '</div>' : '';
             detailAddr += '<div>지번 주소 : ' + result[0].address.address_name + '</div>';
@@ -376,14 +461,38 @@ kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
             infowindow.setContent(content);
             infowindow.open(map, marker);
             
-            $('#placeName').val(result[0].road_address.address_name);
-            $('#placeName2').val(result[0].address.address_name);
-        }   
+         	$(document).ready(function(){
+         		$("#btn1").on('click', function(){
+         			var form = {
+         				placeName : $('#placeName').val(marker.getPosition().getLat());
+         				placeName2 : $('#placeName2').val(marker.getPosition().getLng());
+         			};
+         			$.ajax({
+         				url : "write",
+         				type : "POST",
+         				data : JSON.stringify(form),
+         				contentType : "application/json; charset=utf-8;",
+         				dataType : "json"
+         				success : function(data){
+         					var pla = data.latitude;
+         					var pla2 = data.longitude;
+         					$('#placeName').text(pla);
+         					$('#placeName2').text(pla2);
+         				},
+         				error : function(){
+         					alert("장소를 다시 선택해 주세요.");
+         				}
+         			});
+         		});
+         	}); */
+/*             $('#placeName').val(result[0].road_address.address_name);
+            $('#placeName2').val(result[0].address.address_name); */
+/*         }   
     });
-});
+}); */
 
 
-function searchAddrFromCoords(coords, callback) {
+/* function searchAddrFromCoords(coords, callback) {
     // 좌표로 주소 정보를 요청합니다
     geocoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback);         
 }
@@ -391,7 +500,8 @@ function searchAddrFromCoords(coords, callback) {
 function searchDetailAddrFromCoords(coords, callback) {
     // 좌표로 상세 주소 정보를 요청합니다
     geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
-}
+} */
+
 
 </script>
 </body>

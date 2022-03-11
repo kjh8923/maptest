@@ -33,7 +33,7 @@
 	</c:forEach>
 </table>
 
-
+<button id="btn1">marker</button><br/><br/>
 <div id="map" style="width:100%;height:350px;"></div>
 
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=92b6b7355eb56122be94594a5e40e5fd&libraries=clusterer"></script>
@@ -48,7 +48,7 @@
  // 마커를 표시할 위치 객체 배열입니다 
 	var positions = [
     	{
-       	 	latlng: new kakao.maps.LatLng('${ list }')
+       	 	latlng: new kakao.maps.LatLng()
     	}
 	];
 
