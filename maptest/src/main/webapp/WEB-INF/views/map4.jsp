@@ -64,7 +64,7 @@
 <div class="container">
 	<h3>Map</h3>
 	<hr/>
-	<form action="/" method="POST" id="frm">
+	<form action="mapmain" method="POST" id="frm">
 		<div class="input-group mb-3 input-group-sm">	<!-- input과 도움말을 묶는 클래스, input-group-sm/lg 도움말 사이즈 -->
 			<div class="input-group-prepend">	<!-- 도움말 위치 표시 클래스 -->
 				<span class="input-group-text">제목</span> <!-- 도움말 내용 표시 클래스 -->
@@ -104,49 +104,43 @@
 
 <script>
 $(document).ready(function(){
-	$("#submit").click(function(event){
+	$('#submit').click(function(event){
 		event.preventDefault(); //원래 form의 기능인 submit를 ajax로 처리
 		
 		var frm = $('#frm');
 		var title = $('#title').val();
 		var content = $('#content').val();
-		var placeName = $('#placeName').val();
-		var placeName2 = $('#placeName2').val();
 		var latitude = $('#latitude').val();
 		var longitude = $('#longitude').val();
-		
+		var placeName = $('#placeName').val();
+		var placeName2 = $('#placeName2').val();
+	
 		// 선택한 값을 json 형태 자료로 생성
 		var json = {
 				title : title,
 				content : content,
-				placeName : placeName,
-				placeName2 : placeName2,
 				latitude : latitude,
-				longitude : longitude
+				longitude : longitude,
+				placeName : placeName,
+				placeName2 : placeName2
 		};
 		
 		// ajax로 json 객체를 controller로 보내서 db 추가
 		$.ajax({
-			type : $("#frm1").attr("method"),
-			url : $("#frm1").attr("action"),
-			data : $("#frm1").serialize(),
+			type : 'post',
+			url : 'insertMap',
+			contentType : 'application/json; charset=UTF-8',
+			data : JSON.stringify(json),
 			success : function(data){	//모달창을 이용하여 가입결과를 출력
-					$(".modal-body").text("작성완료");
-					//$("#modalBtn")[0].click(); //자동클릭
-					$("#modalBtn").trigger("click"); //자동클릭
-					$("#closeBtn").click(function(event){
-						event.preventDefault();
-						location.href="map4"; //페이지 이동
-					});			
+				console.log(data);			
 			},
 			error : function(){
-				$(".modal-body").text("작성실패");
-				//$("#modalBtn")[0].click();
-				$("#modalBtn").trigger("click");
+				console.log('오류');
 			}
 		});
 	});
 });
+
 // 마커를 담을 배열입니다
 var markers = [];
 
@@ -376,8 +370,11 @@ function displayInfowindow(marker, title) {
 
  	// 클릭한 위도, 경도 정보를 가져옵니다
     var latlng = marker.latLng;
- 	$('#latitude').val(marker.getPosition().getLat());
-    $('#longitude').val(marker.getPosition().getLng()); 
+	$('#latitude').val(marker.getPosition().getLat());
+    $('#longitude').val(marker.getPosition().getLng());
+    
+    
+
     
 /* 			$("#btn1").on('click', function(){
 				alert("좌표 전송");
@@ -411,6 +408,8 @@ function removeAllChildNods(el) {
         el.removeChild (el.lastChild);
     }
 }
+
+ 
  
 /* kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
 	// 클릭한 위도, 경도 정보를 가져옵니다 

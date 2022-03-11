@@ -9,23 +9,24 @@ import com.kjh.map.dto.ContentDto;
 
 public class ContentDao implements IDao {
 	
+	private final SqlSession sqlSession;
+	
 	@Autowired
-	private SqlSession sqlSession;
-	
-	public ContentDao() {
-		
-	}
-	
-	@Override
-	public void writeDao(String title, String content, String latitude, String longitude, String placeName, String placeName2) {
-		ContentDto dto = new ContentDto(0, title, content, latitude, longitude, placeName, placeName2);
-		sqlSession.insert("writeDao", dto);
+	public ContentDao(SqlSession sqlSession) {
+		this.sqlSession = sqlSession;
 	}
 
 	@Override
-	public ArrayList<ContentDto> listDao() {
-		ArrayList<ContentDto> result = (ArrayList)sqlSession.selectList("listDao");
-		return result;
+	public void insertMap(ContentDto dto) {
+		sqlSession.insert("insertMap", dto);
 	}
+
+	@Override
+	public ArrayList<ContentDto> selectAllMap() {
+		ArrayList<ContentDto> dtos = (ArrayList)sqlSession.selectList("selectAllMap");
+		return dtos;
+	}
+	
+
 
 }

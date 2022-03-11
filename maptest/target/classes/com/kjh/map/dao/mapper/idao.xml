@@ -3,15 +3,12 @@
 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace = "com.kjh.map.dao.IDao">
-	<insert id="writeDao" parameterType="com.kjh.map.dto.ContentDto">
+<mapper namespace = "com.kjh.map.dao.mapper.IDao">
+	<insert id="insertMap" parameterType="com.kjh.map.dto.ContentDto">
 		INSERT INTO MAPTEST(MID, TITLE, CONTENT, LATITUDE, LONGITUDE, PLACENAME, PLACENAME2)
 		values(maptest_seq.nextval, #{title}, #{content}, #{latitude}, #{longitude}, #{placeName}, #{placeName2})
 	</insert>
-	
-	<select id="listDao" resultType="com.kjh.map.dto.ContentDto">
-		SELECT LATITUDE, LONGITUDE FROM MAPTEST
-	</select>
+
 </mapper>	
 
 
