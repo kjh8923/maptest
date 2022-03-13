@@ -247,7 +247,7 @@
 		</dependency>
 
 <!-- ☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆ 추가된 dependency ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★ -->
-        
+
 	</dependencies>
     <build>
         <plugins>

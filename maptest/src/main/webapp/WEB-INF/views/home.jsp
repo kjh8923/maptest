@@ -25,7 +25,7 @@
 		<td>위도</td>
 		<td>경도</td>
 	</tr>
-	<c:forEach items="${ list }" var="dto">
+	<c:forEach items="${ getAllMap.do }" var="dto">
 		<tr>
 			<td>${ dto.latitude }</td>
 			<td>${ dto.longitude }</td>

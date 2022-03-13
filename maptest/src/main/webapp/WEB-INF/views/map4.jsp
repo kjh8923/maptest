@@ -58,6 +58,7 @@
 </style>
 </head>
 <body>
+<a href = "main">main</a>
 
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=92b6b7355eb56122be94594a5e40e5fd&libraries=services"></script>
 
@@ -75,7 +76,7 @@
 			<div class="input-group-prepend">	<!-- 도움말 위치 표시 클래스 -->
 				<span class="input-group-text">내용</span> <!-- 도움말 내용 표시 클래스 -->
 			</div>
-			<textarea class="form-control" placeholder="content" rows="10" cols="30" name="content" style="height : 350px;"></textarea>
+			<textarea class="form-control" placeholder="content" rows="10" cols="30" id="content" name="content" style="height : 350px;"></textarea>
 		</div>
 		<input type="text" id="placeName" name="placeName" value="" style="width:400px"><br/>
 		<input type="text" id="placeName2" name="placeName2" value="" style="width:400px"><br/>
@@ -107,7 +108,7 @@ $(document).ready(function(){
 	$('#submit').click(function(event){
 		event.preventDefault(); //원래 form의 기능인 submit를 ajax로 처리
 		
-		var frm = $('#frm');
+		var frm = $('frm');
 		var title = $('#title').val();
 		var content = $('#content').val();
 		var latitude = $('#latitude').val();
@@ -372,31 +373,7 @@ function displayInfowindow(marker, title) {
     var latlng = marker.latLng;
 	$('#latitude').val(marker.getPosition().getLat());
     $('#longitude').val(marker.getPosition().getLng());
-    
-    
-
-    
-/* 			$("#btn1").on('click', function(){
-				alert("좌표 전송");
-				$.ajax({
-					url : "home",
-					type : "post",
-					data :{
-						latitude : $('#latitude').val(),
-						longitude : $('#longitude').val(),
-					},
-					contentType : "application/json; charset=utf-8;",
-					dataType : "json",
-					success : function(data){
-						alert('성공');
-					},
-					error : function(){
-						alert("장소를 다시 선택해 주세요.");
-					}
-				});
-			});  */
-    
-   
+      
     infowindow.setContent(content);
     infowindow.open(map, marker);
 }
@@ -409,44 +386,18 @@ function removeAllChildNods(el) {
     }
 }
 
- 
- 
-/* kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
+kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
 	// 클릭한 위도, 경도 정보를 가져옵니다 
     var latlng = mouseEvent.latLng; 
 
     // 마커 위치를 클릭한 위치로 옮깁니다
     marker.setPosition(latlng);
     
- 	$(document).ready(function(){
- 		$("#btn1").on('click', function(){
- 			var form = {
- 				latitude : $('#latitude').val(marker.getPosition().getLat());
- 				longitude : $('#longitude').val(marker.getPosition().getLng());
- 			};
- 			$.ajax({
- 				url : "write",
- 				type : "POST",
- 				data : JSON.stringify(form),
- 				contentType : "application/json; charset=utf-8;",
- 				dataType : "json"
- 				success : function(data){
- 					var lat = data.latitude;
- 					var lon = data.longitude;
- 					$('#latitude').text(lat);
- 					$('#longitude').text(lon);
- 				},
- 				error : function(){
- 					alert("장소를 다시 선택해 주세요.");
- 				}
- 			});
- 		});
- 	}); */
-/*     $('#latitude').val(latlng.getLat());
-    $('#longitude').val(latlng.getLng()); */
+    $('#latitude').val(latlng.getLat());
+    $('#longitude').val(latlng.getLng());
     
  	// 지도를 클릭했을 때 클릭 위치 좌표에 대한 주소정보를 표시하도록 이벤트를 등록합니다
-/*     searchDetailAddrFromCoords(mouseEvent.latLng, function(result, status) {
+    searchDetailAddrFromCoords(mouseEvent.latLng, function(result, status) {
         if (status === kakao.maps.services.Status.OK) {
             var detailAddr = !!result[0].road_address ? '<div>도로명주소 : ' + result[0].road_address.address_name + '</div>' : '';
             detailAddr += '<div>지번 주소 : ' + result[0].address.address_name + '</div>';
@@ -460,38 +411,14 @@ function removeAllChildNods(el) {
             infowindow.setContent(content);
             infowindow.open(map, marker);
             
-         	$(document).ready(function(){
-         		$("#btn1").on('click', function(){
-         			var form = {
-         				placeName : $('#placeName').val(marker.getPosition().getLat());
-         				placeName2 : $('#placeName2').val(marker.getPosition().getLng());
-         			};
-         			$.ajax({
-         				url : "write",
-         				type : "POST",
-         				data : JSON.stringify(form),
-         				contentType : "application/json; charset=utf-8;",
-         				dataType : "json"
-         				success : function(data){
-         					var pla = data.latitude;
-         					var pla2 = data.longitude;
-         					$('#placeName').text(pla);
-         					$('#placeName2').text(pla2);
-         				},
-         				error : function(){
-         					alert("장소를 다시 선택해 주세요.");
-         				}
-         			});
-         		});
-         	}); */
-/*             $('#placeName').val(result[0].road_address.address_name);
-            $('#placeName2').val(result[0].address.address_name); */
-/*         }   
+            $('#placeName').val(result[0].road_address.address_name);
+            $('#placeName2').val(result[0].address.address_name);
+        }   
     });
-}); */
+});
 
 
-/* function searchAddrFromCoords(coords, callback) {
+function searchAddrFromCoords(coords, callback) {
     // 좌표로 주소 정보를 요청합니다
     geocoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback);         
 }
@@ -499,8 +426,7 @@ function removeAllChildNods(el) {
 function searchDetailAddrFromCoords(coords, callback) {
     // 좌표로 상세 주소 정보를 요청합니다
     geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
-} */
-
+}
 
 </script>
 </body>
