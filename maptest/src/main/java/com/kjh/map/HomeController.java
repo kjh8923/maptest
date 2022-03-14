@@ -52,17 +52,23 @@ public class HomeController {
 		mapper.insertMap(dto);
 	}
 	
-	@RequestMapping("/mapmain")
-	public String join_view() {
-		return "home";
+	@RequestMapping("/main")
+	public String main() {
+		return "main";
 	}
 	
+	@RequestMapping("/markerclusterer")
+	public String markerclusterer() {
+		return "markerclusterer";
+	}
 	
-	@RequestMapping("/main")
-	public String main(Model model) {
+	@ResponseBody
+	@RequestMapping(value = "/getlatlng", produces="application/json; charset=UTF-8")
+	public ArrayList<ContentDto> getlatlng(Model model) {
 		ArrayList<ContentDto> latlng = dao.selectlatlng();
 		model.addAttribute("latlng", latlng);
-		return "main";
+		System.out.println(latlng);
+		return latlng;
 	}
 	
 }

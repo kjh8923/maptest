@@ -54,14 +54,14 @@
 #pagination {margin:10px auto;text-align: center;}
 #pagination a {display:inline-block;margin-right:10px;}
 #pagination .on {font-weight: bold; cursor: default;color:#777;}
-
 </style>
 </head>
 <body>
-<a href = "main">main</a>
-
+<a href = "main">main</a><br/>
+<a href = "markerclusterer">markerclusterer</a>
+ 
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=92b6b7355eb56122be94594a5e40e5fd&libraries=services"></script>
-
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=92b6b7355eb56122be94594a5e40e5fd"></script>
 <div class="container">
 	<h3>Map</h3>
 	<hr/>
@@ -78,12 +78,18 @@
 			</div>
 			<textarea class="form-control" placeholder="content" rows="10" cols="30" id="content" name="content" style="height : 350px;"></textarea>
 		</div>
-		<input type="text" id="placeName" name="placeName" value="" style="width:400px"><br/>
+		<input type="text" id="placeName" name="placeName" value="" style="width:400px">
 		<input type="text" id="placeName2" name="placeName2" value="" style="width:400px"><br/>
-		<input type="text" id="latitude" name="latitude" value="" style="width:400px"><br/>
-		<input type="text" id="longitude" name="longitude" value="" style="width:400px">
+		<!-- input 추가,삭제 -->
+		<div id="pre_set">
+	    	<input type="text" id="latitude" name="latitude[]" value="" style="width:400px">
+	    	<input type="text" id="longitude" name="longitude[]" value="" style="width:400px">
+	    	<input type="button" value="삭제" onclick="remove_item(this)">
+		</div>
+		<div id="field"></div>
+		<input type="button" value=" 추가 " onclick="add_item()">			
 		<button type="submit" id="submit" class="btn btn-primary" style="float: right;">입력</button>
-	</form>
+	</form><br/>
 
 	<div class="map_wrap">
     	<div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
@@ -104,6 +110,20 @@
 </div>
 
 <script>
+
+/* input  latitude, longitude 추가 삭제*/
+function add_item(){
+    // pre_set 에 있는 내용을 읽어와서 처리..
+    var div = document.createElement('div');
+    div.innerHTML = document.getElementById('pre_set').innerHTML;
+    document.getElementById('field').appendChild(div);
+}
+
+function remove_item(obj){
+    // obj.parentNode 를 이용하여 삭제
+    document.getElementById('field').removeChild(obj.parentNode);
+}
+
 $(document).ready(function(){
 	$('#submit').click(function(event){
 		event.preventDefault(); //원래 form의 기능인 submit를 ajax로 처리
@@ -122,6 +142,7 @@ $(document).ready(function(){
 				content : content,
 				latitude : latitude,
 				longitude : longitude,
+				longitude4 : longitude4,
 				placeName : placeName,
 				placeName2 : placeName2
 		};
@@ -195,7 +216,7 @@ function placesSearchCB(data, status, pagination) {
         // 정상적으로 검색이 완료됐으면
         // 검색 목록과 마커를 표출합니다
         displayPlaces(data);
-
+        console.log(data);
         // 페이지 번호를 표출합니다
         displayPagination(pagination);
 
@@ -428,6 +449,29 @@ function searchDetailAddrFromCoords(coords, callback) {
     geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
 }
 
+function setMapType(maptype) { 
+    var roadmapControl = document.getElementById('btnRoadmap');
+    var skyviewControl = document.getElementById('btnSkyview'); 
+    if (maptype === 'roadmap') {
+        map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);    
+        roadmapControl.className = 'selected_btn';
+        skyviewControl.className = 'btn';
+    } else {
+        map.setMapTypeId(kakao.maps.MapTypeId.HYBRID);    
+        skyviewControl.className = 'selected_btn';
+        roadmapControl.className = 'btn';
+    }
+}
+
+// 지도 확대, 축소 컨트롤에서 확대 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
+function zoomIn() {
+    map.setLevel(map.getLevel() - 1);
+}
+
+// 지도 확대, 축소 컨트롤에서 축소 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
+function zoomOut() {
+    map.setLevel(map.getLevel() + 1);
+}
 </script>
 </body>
 </html>
