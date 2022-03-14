@@ -153,8 +153,7 @@ $(document).ready(function(){
 			url : 'insertMap',
 			contentType : 'application/json; charset=UTF-8',
 			data : JSON.stringify(json),
-			success : function(data){	//모달창을 이용하여 가입결과를 출력
-				console.log(data);			
+			success : function(data){			
 			},
 			error : function(){
 				console.log('오류');
@@ -216,7 +215,7 @@ function placesSearchCB(data, status, pagination) {
         // 정상적으로 검색이 완료됐으면
         // 검색 목록과 마커를 표출합니다
         displayPlaces(data);
-        console.log(data);
+
         // 페이지 번호를 표출합니다
         displayPagination(pagination);
 
@@ -410,9 +409,27 @@ function removeAllChildNods(el) {
 kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
 	// 클릭한 위도, 경도 정보를 가져옵니다 
     var latlng = mouseEvent.latLng; 
+    console.log(latlng);
+ 	// 지도에 표시된 마커 객체를 가지고 있을 배열입니다
+    var markers = [];
+    console.log(markers);
+ 	// 마커를 지도위에 표시합니다 
+    addMarker(new kakao.maps.LatLng(latlng.getLat(), latlng.getLng())); 
+    
+ 	// 마커를 생성하고 지도위에 표시하는 함수입니다
+    function addMarker(position) {
+        
+        // 마커를 생성합니다
+        var marker = new kakao.maps.Marker({
+            position: position
+        });
 
-    // 마커 위치를 클릭한 위치로 옮깁니다
-    marker.setPosition(latlng);
+        // 마커가 지도 위에 표시되도록 설정합니다
+        marker.setMap(map);
+        
+        // 생성된 마커를 배열에 추가합니다
+        markers.push(marker);
+    }
     
     $('#latitude').val(latlng.getLat());
     $('#longitude').val(latlng.getLng());
@@ -449,29 +466,6 @@ function searchDetailAddrFromCoords(coords, callback) {
     geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
 }
 
-function setMapType(maptype) { 
-    var roadmapControl = document.getElementById('btnRoadmap');
-    var skyviewControl = document.getElementById('btnSkyview'); 
-    if (maptype === 'roadmap') {
-        map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);    
-        roadmapControl.className = 'selected_btn';
-        skyviewControl.className = 'btn';
-    } else {
-        map.setMapTypeId(kakao.maps.MapTypeId.HYBRID);    
-        skyviewControl.className = 'selected_btn';
-        roadmapControl.className = 'btn';
-    }
-}
-
-// 지도 확대, 축소 컨트롤에서 확대 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
-function zoomIn() {
-    map.setLevel(map.getLevel() - 1);
-}
-
-// 지도 확대, 축소 컨트롤에서 축소 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
-function zoomOut() {
-    map.setLevel(map.getLevel() + 1);
-}
 </script>
 </body>
 </html>

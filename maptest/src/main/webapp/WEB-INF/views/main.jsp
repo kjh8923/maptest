@@ -22,18 +22,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-<%-- <table width="500" cellpadding="0" cellspacing="0" border="1">
-	<tr>
-		<td>위도</td>
-		<td>경도</td>
-	</tr>
-	<c:forEach items="${ getlatlng }" var="dto">
-		<tr>
-			<td id="latitude">${ dto.latitude }</td>
-			<td id="longitude">${ dto.longitude }</td>
-		</tr>
-	</c:forEach>
-</table> --%>
 
 <div id="map" style="width:100%;height:350px;"></div>
 
