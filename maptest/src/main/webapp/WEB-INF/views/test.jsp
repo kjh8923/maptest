@@ -168,13 +168,14 @@ $(document).ready(function (){
     function resetIndex(){
         index = 0
         testForm.children('div').each(function (){
-            var target = $(this).children(index, 'input[type=text]')
-            target.attr("id", "newInput"+index)
-            target.attr("value", target.attr("id"))
+            var target = $(this).children(index)
+            target.attr("id", "latitude"+index)
+            target.attr("id", "longitude"+index)
+            /* target.attr("value", target.attr("id")) */
             index+=1
         })
         $("#showIndex").text(index)
-    }
+    } 
 
     $("#readInputs").on("click", function () {
         var result = ""
@@ -186,7 +187,6 @@ $(document).ready(function (){
     })
 
 
-
     $("#insertButton").trigger("click")
     $("#insertButton").trigger("click")
     $("#showIndex").text(index)
@@ -196,9 +196,9 @@ $(document).ready(function (){
 
 
 $(document).ready(function(){
+	var index = 0
 	$('#submit').click(function(event){
 		event.preventDefault(); //원래 form의 기능인 submit를 ajax로 처리
-		var index = 0
 		
 		var frm = $('frm');
 		var title = $('#title').val();
@@ -207,7 +207,7 @@ $(document).ready(function(){
 		var longitude = $('#longitude'+index).val();
 		var placeName = $('#placeName').val();
 		var placeName2 = $('#placeName2').val();
-	
+		index+=1
 		// 선택한 값을 json 형태 자료로 생성
 		var json = {
 				title : title,
@@ -458,16 +458,17 @@ function displayPagination(pagination) {
 
 // 검색결과 목록 또는 마커를 클릭했을 때 호출되는 함수입니다
 // 인포윈도우에 장소명을 표시합니다
+var index = 0
+
 function displayInfowindow(marker, title) {
     var content = '<div style="padding:5px;z-index:1;">' + title + '</div>';
 
  	// 클릭한 위도, 경도 정보를 가져옵니다
     var latlng = marker.latLng;
- 	
-    var index = 0
+    
 	$('#latitude'+index).val(marker.getPosition().getLat());
     $('#longitude'+index).val(marker.getPosition().getLng());
-      
+    index+=1  
     infowindow.setContent(content);
     infowindow.open(map, marker);
 }
