@@ -82,8 +82,8 @@
 		<input type="text" id="placeName2" name="placeName2" value="" style="width:400px"><br/>
 		<!-- input 추가,삭제 -->
 		<div id="pre_set">
-	    	<input type="text" id="latitude" name="latitude[]" value="" style="width:400px">
-	    	<input type="text" id="longitude" name="longitude[]" value="" style="width:400px">
+	    	<input type="text" id="latitude" name="latitude" value="" style="width:400px">
+	    	<input type="text" id="longitude" name="longitude" value="" style="width:400px">
 	    	<input type="button" value="삭제" onclick="remove_item(this)">
 		</div>
 		<div id="field"></div>
@@ -142,7 +142,6 @@ $(document).ready(function(){
 				content : content,
 				latitude : latitude,
 				longitude : longitude,
-				longitude4 : longitude4,
 				placeName : placeName,
 				placeName2 : placeName2
 		};

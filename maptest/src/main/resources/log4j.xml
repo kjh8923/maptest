@@ -12,7 +12,7 @@
 	
 	<!-- Application Loggers -->
 	<logger name="com.kjh.map">
-		<level value="info" />
+		<level value="trace" />
 	</logger>
 	
 	<!-- 3rdparty Loggers -->
