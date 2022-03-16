@@ -44,6 +44,7 @@ public class HomeController {
 		//return "main";
 		return "map4";
 		//return "test";
+		//return "map3";
 	}
 	
 	@ResponseBody

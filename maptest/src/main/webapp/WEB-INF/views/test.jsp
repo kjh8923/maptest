@@ -92,15 +92,16 @@
 		<button type="submit" id="submit" class="btn btn-primary" style="float: right;">입력</button>
 	</form><br/> -->
 	
-	<div>
+<!-- 	<div>
     총 갯수 : <span id="showIndex"></span> / 5
 	</div>
 	<span id="insertButton" style="font-size: larger">추가</span>
     <span id="readInputs" style="font-size: larger">저장</span>
     <form id="testForm">
-    </form>
+    </form> -->
 	
-	
+	<form id="frm">
+	</form>
 	
 
 	<div class="map_wrap">
@@ -193,6 +194,25 @@ $(document).ready(function (){
     $("#showIndex").text(index)
 
 });
+
+
+function getInput(){
+	var ip = document.getElementById('frm'),
+	ipStr = '<input type="text id="latitude'+(index+1)+'" name="latitude" value=""/>' +
+			'<input type="text id="longitude'+(index+1)+'" name="longitude" value=""/>' +
+			'<input type="text id="placeName'+(index+1)+'" name="placeName" value=""/>';
+	if(title != null){
+		var index = 1
+        $('#latitude'+index).val(marker.getPosition().getLat());
+		$('#longitude'+index).val(marker.getPosition().getLng());           
+		$('#placeName'+index).val(title)
+		index += 1
+	}else{
+		alter(장소를 다시 선택해주세요.);
+	}
+	
+	ip.innerHTML = ipStr
+}
 
 
 

@@ -96,7 +96,7 @@
 	</div>
 	<span id="insertButton" style="font-size: larger">추가</span>
     <span id="readInputs" style="font-size: larger">저장</span>
-    <form id="testForm">
+    <form id="frm">
     </form>
 
 
@@ -125,77 +125,7 @@
 </div>
 
 <script>
-$(document).ready(function (){
 
-    var testForm = $("#testForm")
-    var index = 0
-
-    $("#insertButton").on("click", function (){
-        if(index == 5){
-            alert("5개 까지만 됩니다.")
-            return false;
-        }
-
-        var newDiv = document.createElement("div")
-        newDiv.setAttribute("class", "newDiv")
-
-        var newInput1 = document.createElement("input")
-        newInput1.setAttribute("id", "latitude"+index)
-        newInput1.setAttribute("type", "text")
-        newInput1.setAttribute("name", "latitude"+index)
-        newInput1.setAttribute("value", " ")
-        var newInput2 = document.createElement("input")
-        newInput2.setAttribute("id", "longitude"+index)
-        newInput2.setAttribute("type", "text")
-        newInput2.setAttribute("name", "longitude"+index)
-        newInput2.setAttribute("value", " ")
-        
-        var removeInput = document.createElement("span")
-        removeInput.setAttribute("class", "removeInput")
-        removeInput.textContent = "지우자"
-
-        newDiv.append(newInput1)
-        newDiv.append(newInput2)
-        newDiv.append(removeInput)
-        testForm.append(newDiv)
-
-        index+=1
-        $("#showIndex").text(index)
-
-    })
-
-    $(document).on("click", ".removeInput", function () {
-        $(this).parent(".newDiv").remove()
-        resetIndex()
-    })
-
-    function resetIndex(){
-        index = 0
-        testForm.children('div').each(function (){
-            var target = $(this).children(index)
-            target.attr("id", "latitude"+index)
-            target.attr("id", "longitude"+index)
-            /* target.attr("value", target.attr("id")) */
-            index+=1
-        })
-        $("#showIndex").text(index)
-    } 
-
-    $("#readInputs").on("click", function () {
-        var result = ""
-        testForm.children('div').each(function (){
-            var target = $(this).children(index, 'input[type=text]')
-            result+=target.attr("id")+":"+target.val()+", "
-        })
-        alert(result)
-    })
-
-
-    $("#insertButton").trigger("click")
-    $("#insertButton").trigger("click")
-    $("#showIndex").text(index)
-
-});
 
 $(document).ready(function(){
 	var index = 0
@@ -362,15 +292,15 @@ function displayPlaces(places) {
         	//addListener(target, type, handler) - 다음 지도 API 객체에 이벤트를 등록한다. 
         	//target : 이벤트를 지원하는 다음 지도 API 객체, type : 이벤트 이름, handler : 이벤트를 처리할 함수
             kakao.maps.event.addListener(marker, 'click', function() { 
-            	displayInfowindow(marker, title);
+            	displayInfowindow(marker, title);            	
             });
                      
             itemEl.onclick =  function () {
-                displayInfowindow(marker, title);
+                displayInfowindow(marker, title);                
             }; 
         })(marker, places[i].place_name);
 
-        fragment.appendChild(itemEl); //appendChild() - 새로운 노드를 해당 노드의 자식 노드 리스트(child node list)의 맨 마지막에 추가
+        fragment.appendChild(itemEl); //appendChild() - 새로운 노드를 해당 노드의 자식 노드 리스트(child node list)의 맨 마지막에 추가        
     }
 
     // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
@@ -468,17 +398,93 @@ function displayPagination(pagination) {
 
 // 검색결과 목록 또는 마커를 클릭했을 때 호출되는 함수입니다
 // 인포윈도우에 장소명을 표시합니다
-function displayInfowindow(marker, title) {
-    var content = '<div style="padding:5px;z-index:1;">' + title + '</div>';
 
-	$('#latitude').val(marker.getPosition().getLat());
-    $('#longitude').val(marker.getPosition().getLng());           
-    $('#placeName').val(title);
-    
+
+function displayInfowindow(marker, title, index) {
+    var content = '<div style="padding:5px;z-index:1;">' + title + '</div>';
+        
+    $(document).ready(function (){
+
+        var testForm = $("#frm")
+        var index = 0
+
+        $("#insertButton").on("click", function (){
+            if(index == 5){
+                alert("5개 까지만 됩니다.")
+                return false;
+            }
+
+            var newDiv = document.createElement("div")
+            newDiv.setAttribute("class", "newDiv")
+
+            var newInput1 = document.createElement("input")
+            newInput1.setAttribute("id", "latitude"+index)
+            newInput1.setAttribute("type", "text")
+            newInput1.setAttribute("value", " ")
+            var newInput2 = document.createElement("input")
+            newInput2.setAttribute("id", "longitude"+index)
+            newInput2.setAttribute("type", "text")
+            newInput2.setAttribute("value", " ")
+            var newInput3 = document.createElement("input")
+            newInput3.setAttribute("id", "placeName"+index)
+            newInput3.setAttribute("type", "text")
+            newInput3.setAttribute("value", " ")
+
+            var removeInput = document.createElement("span")
+            removeInput.setAttribute("class", "removeInput")
+            removeInput.textContent = "지우자"
+
+            newDiv.append(newInput1)
+            newDiv.append(newInput2)
+            newDiv.append(newInput3)            
+            newDiv.append(removeInput)
+            testForm.append(newDiv)
+            
+			$('#latitude'+index).val(marker.getPosition().getLat());
+			$('#longitude'+index).val(marker.getPosition().getLng());           
+			$('#placeName'+index).val(title)
+			
+            index+=1
+            $("#showIndex").text(index)
+
+        })
+
+        $(document).on("click", ".removeInput", function () {
+            $(this).parent(".newDiv").remove()
+            resetIndex()
+        })
+
+        function resetIndex(){
+            index = 0
+            testForm.children('div').each(function (){
+                var target = $(this).children(index)
+                target.attr("id", "latitude"+index)
+                target.attr("id", "longitude"+index)
+                target.attr("id", "placeName"+index)
+                /* target.attr("value", target.attr("id")) */
+                index+=1
+            })
+            $("#showIndex").text(index)
+        } 
+
+        $("#readInputs").on("click", function () {
+            var result = ""
+            testForm.children('div').each(function (){
+                var target = $(this).children(index, 'input[type=text]')
+                result+=target.attr("id")+":"+target.val()+", "
+            })
+            alert(result)
+        })
+
+
+        $("#insertButton").trigger("click")
+        $("#showIndex").text(index)
+
+    }); 
+
     infowindow.setContent(content);
     infowindow.open(map, marker);
 }
-
  // 검색결과 목록의 자식 Element를 제거하는 함수입니다
 function removeAllChildNods(el) {   
     while (el.hasChildNodes()) {
