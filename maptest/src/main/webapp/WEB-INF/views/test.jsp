@@ -60,8 +60,9 @@
 <a href = "main">main</a><br/>
 <a href = "markerclusterer">markerclusterer</a>
  
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=92b6b7355eb56122be94594a5e40e5fd&libraries=services"></script>
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=92b6b7355eb56122be94594a5e40e5fd"></script>
+<!-- <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=92b6b7355eb56122be94594a5e40e5fd&libraries=services"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=92b6b7355eb56122be94594a5e40e5fd"></script> -->
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=92b6b7355eb56122be94594a5e40e5fd&libraries=services,clusterer,drawing"></script>
 <div class="container">
 	<h3>Map</h3>
 	<hr/>
@@ -257,14 +258,6 @@ searchPlaces();
 
 //주소-좌표 변환 객체를 생성합니다
 var geocoder = new kakao.maps.services.Geocoder(); 
- 
-//지도를 클릭한 위치에 표출할 마커입니다
-var marker = new kakao.maps.Marker({ 
-    // 지도 중심좌표에 마커를 생성합니다 
-    position: map.getCenter() 
-}); 
-// 지도에 마커를 표시합니다
-marker.setMap(map);
 
 // 키워드 검색을 요청하는 함수입니다
 function searchPlaces() {
@@ -471,8 +464,8 @@ function displayInfowindow(marker, title) {
     index+=1  
     infowindow.setContent(content);
     infowindow.open(map, marker);
+    
 }
-
 
  // 검색결과 목록의 자식 Element를 제거하는 함수입니다
 function removeAllChildNods(el) {   
@@ -481,19 +474,17 @@ function removeAllChildNods(el) {
     }
 }
 
+//맵에 클릭이벤트를 등록합니다
 kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
+	
 	// 클릭한 위도, 경도 정보를 가져옵니다 
     var latlng = mouseEvent.latLng; 
-    console.log(latlng);
- 	// 지도에 표시된 마커 객체를 가지고 있을 배열입니다
-    var markers = [];
-    console.log(markers);
+
  	// 마커를 지도위에 표시합니다 
-    addMarker(new kakao.maps.LatLng(latlng.getLat(), latlng.getLng())); 
+    addMarker(new kakao.maps.LatLng(latlng.getLat(), latlng.getLng()));
     
  	// 마커를 생성하고 지도위에 표시하는 함수입니다
     function addMarker(position) {
-        
         // 마커를 생성합니다
         var marker = new kakao.maps.Marker({
             position: position
@@ -503,9 +494,10 @@ kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
         marker.setMap(map);
         
         // 생성된 마커를 배열에 추가합니다
-        markers.push(marker);
+        markers.push(marker);        
     }
-    
+ 	
+ 	
     $('#latitude').val(latlng.getLat());
     $('#longitude').val(latlng.getLng());
     
@@ -529,17 +521,7 @@ kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
         }   
     });
 });
-
-
-function searchAddrFromCoords(coords, callback) {
-    // 좌표로 주소 정보를 요청합니다
-    geocoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback);         
-}
-
-function searchDetailAddrFromCoords(coords, callback) {
-    // 좌표로 상세 주소 정보를 요청합니다
-    geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
-}
+   
 
 </script>
 </body>

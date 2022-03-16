@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace = "com.kjh.map.dao.MapIDao">
+	<insert id="insertMap" parameterType="com.kjh.map.dto.MapDto">
+		INSERT INTO MAPTEST(MID, LATITUDE, LONGITUDE, PLACENAME)
+		values(maptest_seq.nextval, #{latitude}, #{longitude}, #{placeName})
+	</insert>
+	
+	<select id="selectlatlng" resultType="com.kjh.map.dto.MapDto">
+		SELECT LATITUDE, LONGITUDE FROM MAPTEST
+	</select>
+
+</mapper>	
+
+

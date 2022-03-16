@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.kjh.map.dao.ContentDao;
-import com.kjh.map.dao.IDao;
-import com.kjh.map.dto.ContentDto;
+import com.kjh.map.dao.MapDao;
+import com.kjh.map.dao.MapIDao;
+import com.kjh.map.dto.MapDto;
 
 
 
@@ -26,10 +26,10 @@ import com.kjh.map.dto.ContentDto;
 @Controller
 public class HomeController {
 	@Autowired
-	private ContentDao dao;
+	private MapDao dao;
 	
 	@Autowired
-	IDao mapper;
+	MapIDao mapper;
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
@@ -42,13 +42,13 @@ public class HomeController {
 
 		//return "home";
 		//return "main";
-		//return "map4";
-		return "test";
+		return "map4";
+		//return "test";
 	}
 	
 	@ResponseBody
 	@PostMapping("/insertMap")
-	public void insertMap(@RequestBody ContentDto dto) {
+	public void insertMap(@RequestBody MapDto dto) {
 		mapper.insertMap(dto);
 	}
 	
@@ -64,8 +64,8 @@ public class HomeController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/getlatlng", produces="application/json; charset=UTF-8")
-	public ArrayList<ContentDto> getlatlng(Model model) {
-		ArrayList<ContentDto> latlng = dao.selectlatlng();
+	public ArrayList<MapDto> getlatlng(Model model) {
+		ArrayList<MapDto> latlng = dao.selectlatlng();
 		model.addAttribute("latlng", latlng);
 		System.out.println(latlng);
 		return latlng;
