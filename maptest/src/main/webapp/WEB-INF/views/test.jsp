@@ -92,16 +92,13 @@
 		<button type="submit" id="submit" class="btn btn-primary" style="float: right;">입력</button>
 	</form><br/> -->
 	
-<!-- 	<div>
+	<div>
     총 갯수 : <span id="showIndex"></span> / 5
 	</div>
 	<span id="insertButton" style="font-size: larger">추가</span>
     <span id="readInputs" style="font-size: larger">저장</span>
-    <form id="testForm">
-    </form> -->
-	
-	<form id="frm">
-	</form>
+    <form id="frm">
+    </form>
 	
 
 	<div class="map_wrap">
@@ -125,7 +122,7 @@
 <script>
 $(document).ready(function (){
 
-    var testForm = $("#testForm")
+    var testForm = $("#frm")
     var index = 0
 
     $("#insertButton").on("click", function (){
@@ -140,13 +137,15 @@ $(document).ready(function (){
         var newInput1 = document.createElement("input")
         newInput1.setAttribute("id", "latitude"+index)
         newInput1.setAttribute("type", "text")
-        newInput1.setAttribute("name", "latitude"+index)
         newInput1.setAttribute("value", " ")
         var newInput2 = document.createElement("input")
         newInput2.setAttribute("id", "longitude"+index)
         newInput2.setAttribute("type", "text")
-        newInput2.setAttribute("name", "longitude"+index)
-        newInput2.setAttribute("value", " ") 
+        newInput2.setAttribute("value", " ")
+        var newInput3 = document.createElement("input")
+        newInput3.setAttribute("id", "placeNAme"+index)
+        newInput3.setAttribute("type", "text")
+        newInput3.setAttribute("value", " ") 
 
         var removeInput = document.createElement("span")
         removeInput.setAttribute("class", "removeInput")
@@ -194,27 +193,6 @@ $(document).ready(function (){
     $("#showIndex").text(index)
 
 });
-
-
-function getInput(){
-	var ip = document.getElementById('frm'),
-	ipStr = '<input type="text id="latitude'+(index+1)+'" name="latitude" value=""/>' +
-			'<input type="text id="longitude'+(index+1)+'" name="longitude" value=""/>' +
-			'<input type="text id="placeName'+(index+1)+'" name="placeName" value=""/>';
-	if(title != null){
-		var index = 1
-        $('#latitude'+index).val(marker.getPosition().getLat());
-		$('#longitude'+index).val(marker.getPosition().getLng());           
-		$('#placeName'+index).val(title)
-		index += 1
-	}else{
-		alter(장소를 다시 선택해주세요.);
-	}
-	
-	ip.innerHTML = ipStr
-}
-
-
 
 $(document).ready(function(){
 	var index = 0
