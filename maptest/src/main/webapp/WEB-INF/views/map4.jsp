@@ -133,6 +133,7 @@ $(document).ready(function (){
         
         var newDiv = document.createElement("div")
         newDiv.setAttribute("class", "newDiv")
+        newDiv.setAttribute("name", "index")
                    
         var newInput1 = document.createElement("input")
         newInput1.setAttribute("id", "latitude"+index)
@@ -185,7 +186,56 @@ $(document).ready(function (){
  $("#showIndex").text(index)       	
 });
 
+/* var idx = document.getElementsByName(index).length;
+for(var i=0; i<idx.length; i++){
+	if(idx[i].sourceIndex==obj.sourceIndex){
+		var j=i;
+	}
+}
+console.log(idx); */
+
+
 $(document).ready(function(){
+	$('#submit').click(function(event){
+		event.preventDefault(); //원래 form의 기능인 submit를 ajax로 처리
+		var data = $("#frm").serialize()
+		/* 		var frm = $('frm');
+		var idx = $("div[name='index']").length;
+		console.log(idx);
+		for(i=0; i < idx.length; i++){
+		latitude = $('#latitude'+i).val();
+		longitude = $('#longitude'+i).val();
+		placeName = $('#placeName'+i).val();		
+		}
+ 		console.log(latitude);
+		console.log(longitude);
+		console.log(placeName);
+		// 선택한 값을 json 형태 자료로 생성
+		var json = {
+				latitude : latitude,
+				longitude : longitude,
+				placeName : placeName,
+		};	 */	
+		$.ajax({
+			type : 'post',
+			url : 'insertMap',
+			contentType : 'application/json; charset=UTF-8',
+			data : $("#frm").serialize(),
+			dataType : 'json',
+			success : function(data){			
+			},
+			error : function(){
+				console.log('오류');
+			}			
+		});
+	});
+});
+
+
+
+// ajax로 json 객체를 controller로 보내서 db 추가
+
+/* $(document).ready(function(){
 	$('#submit').click(function(event){
 		event.preventDefault(); //원래 form의 기능인 submit를 ajax로 처리
 		
@@ -214,7 +264,7 @@ $(document).ready(function(){
 			}
 		});
 	});
-});
+}); */
 
 
 
