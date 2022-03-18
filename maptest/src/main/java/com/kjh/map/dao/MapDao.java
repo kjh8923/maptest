@@ -12,15 +12,24 @@ public class MapDao implements MapIDao {
 	@Autowired
 	private SqlSession sqlSession;
 	
-	@Autowired
-	public MapDao(SqlSession sqlSession) {
-		this.sqlSession = sqlSession;
+	/*
+	 * @Autowired public MapDao(SqlSession sqlSession) { this.sqlSession =
+	 * sqlSession; }
+	 */
+	
+	@Override
+	public String insertMap(MapDto dto) {
+			int res = sqlSession.insert("insertMap", dto);
+			System.out.println(res);
+			String result = null;
+			if(res > 0)
+				result = "success";
+			else
+				result = "failed";
+			
+			return result;
 	}
 
-	@Override
-	public void insertMap(MapDto dto) {
-		sqlSession.insert("insertMap", dto);
-	}
 
 	@Override
 	public ArrayList<MapDto> selectlatlng(){
@@ -29,6 +38,8 @@ public class MapDao implements MapIDao {
 		//selectList()메서드는 디비에서 다수개의 resultset을 반환하는데 사용
 		return result;
 	}
+
+
 	
 	
 	

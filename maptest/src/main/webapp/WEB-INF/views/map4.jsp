@@ -89,15 +89,33 @@
 		<input type="button" value=" 추가 " onclick="add_item()">			
 		<button type="submit" id="submit" class="btn btn-primary" style="float: right;">입력</button>
 	</form><br/> -->
-
+	<div class="container">
+		<input id="modalBtn" type="hidden" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" value="modal"/>
+		<!-- modal창 -->
+		<div class="modal fade" id="myModal" role="dialog">
+			<div class="modal-dialog modal-dialog-centered modal-sm text-center">
+				<div class="modal-content">
+					<div class="modal-header bg-light">
+						<h4 class="modal-title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;POST작성</h4>
+					</div>
+					<div class="modal-body bg-light">
+						<h4>작성되었습니다.</h4>
+					</div>
+					<div class="modal-footer bg-light">
+						<button id="closeBtn" type="button" class="btn btn-default btn-success" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<div>
     총 갯수 : <span id="showIndex"></span> / 5
 	</div>
-	<button type="button" id="insertButton" style="font-size: larger">추가</button>
-    <span id="readInputs" style="font-size: larger">저장</span>
-    <form id="frm">
-    <button type="submit" id="submit" class="btn btn-primary" style="float: right;">입력</button>
+	<button type="button" id="insertButton" class="btn btn-success">추가</button>
+    <form id="frm" name="frm" action="insertMap" method="post">
+    	<input type="hidden" id="index" name="ind" value=""/>
+    <button type="submit" id="submit" class="btn btn-primary" style="float: right;">저장</button>
     </form>
 
 	<div class="map_wrap">
@@ -137,20 +155,25 @@ $(document).ready(function (){
                    
         var newInput1 = document.createElement("input")
         newInput1.setAttribute("id", "latitude"+index)
-        newInput1.setAttribute("type", "text")
-        newInput1.setAttribute("value", " ")
+        newInput1.setAttribute("type", "hidden")
+        newInput1.setAttribute("name", "latitude"+index)
+        newInput1.setAttribute("value", "")
         var newInput2 = document.createElement("input")
         newInput2.setAttribute("id", "longitude"+index)
-        newInput2.setAttribute("type", "text")
-        newInput2.setAttribute("value", " ")
+        newInput2.setAttribute("type", "hidden")
+        newInput2.setAttribute("name", "longitude"+index)
+        newInput2.setAttribute("value", "")
         var newInput3 = document.createElement("input")
         newInput3.setAttribute("id", "placeName"+index)
         newInput3.setAttribute("type", "text")
-        newInput3.setAttribute("value", " ")      
+        newInput3.setAttribute("name", "placeName"+index)
+        newInput3.setAttribute("value", "")      
         
-        var removeInput = document.createElement("span")
-        removeInput.setAttribute("class", "removeInput")
-        removeInput.textContent = "지우자"
+        var removeInput = document.createElement("button")
+        removeInput.setAttribute("type", "button")
+        removeInput.setAttribute("id", "removebtn")
+        removeInput.setAttribute("class", "btn btn-danger")
+        removeInput.textContent = "삭제"
 		
         
         	
@@ -163,9 +186,10 @@ $(document).ready(function (){
         index+=1
         console.log(newDiv);
         $("#showIndex").text(index)
+        $("#index").val(index)
     }) 
 	
-    $(document).on("click", ".removeInput", function () {
+    $(document).on("click", "#removebtn", function () {
         $(this).parent(".newDiv").remove()
         resetIndex()
     })
@@ -180,56 +204,73 @@ $(document).ready(function (){
             index+=1
         })
         $("#showIndex").text(index)
+        $("#index").val(index)
     }
 
  $("#insertButton").trigger("click")
  $("#showIndex").text(index)       	
 });
 
-/* var idx = document.getElementsByName(index).length;
-for(var i=0; i<idx.length; i++){
-	if(idx[i].sourceIndex==obj.sourceIndex){
-		var j=i;
-	}
-}
-console.log(idx); */
-
-
 $(document).ready(function(){
-	$('#submit').click(function(event){
+	$("#frm").submit(function(event){
 		event.preventDefault(); //원래 form의 기능인 submit를 ajax로 처리
-		var data = $("#frm").serialize()
-		/* 		var frm = $('frm');
-		var idx = $("div[name='index']").length;
-		console.log(idx);
-		for(i=0; i < idx.length; i++){
-		latitude = $('#latitude'+i).val();
-		longitude = $('#longitude'+i).val();
-		placeName = $('#placeName'+i).val();		
-		}
- 		console.log(latitude);
-		console.log(longitude);
-		console.log(placeName);
-		// 선택한 값을 json 형태 자료로 생성
-		var json = {
-				latitude : latitude,
-				longitude : longitude,
-				placeName : placeName,
-		};	 */	
 		$.ajax({
-			type : 'post',
-			url : 'insertMap',
-			contentType : 'application/json; charset=UTF-8',
+			type : $("#frm").attr("method"),
+			url : $("#frm").attr("action"),
 			data : $("#frm").serialize(),
-			dataType : 'json',
-			success : function(data){			
+			success : function(data){
+				console.log(data);
+				if(data.search("insert-success") > -1){
+					$(".modal-body").text("작성되었습니다.");
+					$("#modalBtn").trigger("click");
+ 					$("#closeBtn").click(function(event){
+						event.preventDefault();
+						location.href = "markerclusterer";
+					});
+				}
+				else{
+					$(".modal-body").text("다시입력해주세요");
+					$("#modalBtn").trigger("click");
+ 					$("#closeBtn").click(function(event){
+						event.preventDefault();
+						location.href = "map4";
+					});
+				}
 			},
-			error : function(){
-				console.log('오류');
+			error : function(data){
+				$(".modal-body").text("다시입력해주세요");
+				$("#modalBtn").trigger("click");
+					$("#closeBtn").click(function(event){
+					event.preventDefault();
+					location.href = "map4";
+				});
 			}			
 		});
 	});
 });
+
+
+
+
+/* $(document).ready(function(){
+	$('#submit').click(function(event){
+		event.preventDefault(); //원래 form의 기능인 submit를 ajax로 처리
+		var json = $("#frm").serialize();
+		console.log(json);
+		$.ajax({
+			type : 'post',
+			url : 'insertMap',
+			contentType : 'application/text; charset=UTF-8',
+			data : json,
+			success : function(data){
+				console.log('성공');
+			},
+			error : function(){
+				console.log('실패');
+			}			
+		});
+	});
+}); */
 
 
 

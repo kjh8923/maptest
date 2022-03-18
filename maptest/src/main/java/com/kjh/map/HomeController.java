@@ -3,6 +3,9 @@ package com.kjh.map;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.kjh.map.command.MapCommand;
 import com.kjh.map.dao.MapDao;
 import com.kjh.map.dao.MapIDao;
 import com.kjh.map.dto.MapDto;
+import com.kjh.map.util.Constant;
 
 
 
@@ -30,6 +35,14 @@ public class HomeController {
 	
 	@Autowired
 	MapIDao mapper;
+	
+	@Autowired
+	public void setMdao(MapDao dao) {
+		this.dao= dao;
+		Constant.mdao = dao;
+	}
+	
+	private MapCommand mcom;
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
@@ -47,15 +60,29 @@ public class HomeController {
 		//return "map3";
 	}
 	
+	/*
+	 * @ResponseBody
+	 * 
+	 * @PostMapping("/insertMap") public void insertMap(@RequestBody MapDto dto) {
+	 * mapper.insertMap(dto); }
+	 */
+	
+	@RequestMapping(value="/insertMap", produces = "application/text; charset=UTF8")
 	@ResponseBody
-	@PostMapping("/insertMap")
-	public void insertMap(@RequestBody MapDto dto) {
-		mapper.insertMap(dto);
+	public String insertMap(HttpServletRequest request, HttpServletResponse response, Model model) {
+		System.out.println("insertMap");
+		mcom = new MapCommand();
+		mcom.execute(model, request);
+		String result = (String)request.getAttribute("result");
+		if(result.equals("success"))
+			return "insert-success";
+		else
+			return "insert-failed";
 	}
 	
-	@RequestMapping("/main")
+	@RequestMapping("/map4")
 	public String main() {
-		return "main";
+		return "map4";
 	}
 	
 	@RequestMapping("/markerclusterer")
