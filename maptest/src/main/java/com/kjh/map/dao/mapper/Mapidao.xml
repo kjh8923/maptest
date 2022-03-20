@@ -6,8 +6,8 @@
 <mapper namespace = "com.kjh.map.dao.MapIDao">
 	<insert id="insertMap" parameterType="com.kjh.map.dto.MapDto">
 		<!-- INSERT INTO MAPTEST(MID, LATITUDE, LONGITUDE, PLACENAME) values(maptest_seq.nextval, ?, ?, ?) -->
-		INSERT INTO MAPTEST(MID, LATITUDE, LONGITUDE, PLACENAME, IND)
-		values(maptest_seq.nextval, #{latitude}, #{longitude}, #{placeName}, #{ind})
+		INSERT INTO MAPTEST(MID, LATITUDE, LONGITUDE, PLACENAME, CATEGORY, PLACECOUNT)
+		values(maptest_seq.nextval, #{latitude}, #{longitude}, #{placeName}, #{category}, #{placecount})
 	</insert>
 	
 	<select id="selectlatlng" resultType="com.kjh.map.dto.MapDto">

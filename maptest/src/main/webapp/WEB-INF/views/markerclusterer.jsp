@@ -98,7 +98,6 @@ $(document).ready(function() {
 			console.log(data);
 			alert('오류');
 		}
-
 	});
 	
 	// 마커 클러스터러에 클릭이벤트를 등록합니다

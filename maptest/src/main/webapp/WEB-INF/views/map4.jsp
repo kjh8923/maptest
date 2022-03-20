@@ -54,6 +54,9 @@
 #pagination {margin:10px auto;text-align: center;}
 #pagination a {display:inline-block;margin-right:10px;}
 #pagination .on {font-weight: bold; cursor: default;color:#777;}
+#removebtn{
+	margin-left : 20px;
+}
 </style>
 </head>
 <body>
@@ -65,30 +68,8 @@
 <div class="container">
 	<h3>Map</h3>
 	<hr/>
-<!-- 	<form action="mapmain" method="POST" id="frm">
-		<div class="input-group mb-3 input-group-sm">	input과 도움말을 묶는 클래스, input-group-sm/lg 도움말 사이즈
-			<div class="input-group-prepend">	도움말 위치 표시 클래스
-				<span class="input-group-text">제목</span> 도움말 내용 표시 클래스
-			</div>
-			<input type="text" class="form-control" placeholder="title" id="title" name="title"/>
-		</div>
-		<div class="input-group mb-3 input-group-sm">	input과 도움말을 묶는 클래스, input-group-sm/lg 도움말 사이즈
-			<div class="input-group-prepend">	도움말 위치 표시 클래스
-				<span class="input-group-text">내용</span> 도움말 내용 표시 클래스
-			</div>
-			<textarea class="form-control" placeholder="content" rows="10" cols="30" id="content" name="content" style="height : 350px;"></textarea>
-		</div>
-		<input type="text" id="placeName" name="placeName" value="" style="width:400px">
-		input 추가,삭제
-		<div id="pre_set">
-	    	<input type="text" id="latitude" name="latitude" value="" style="width:400px">
-	    	<input type="text" id="longitude" name="longitude" value="" style="width:400px">
-	    	<input type="button" value="삭제" onclick="remove_item(this)">
-		</div>
-		<div id="field"></div>
-		<input type="button" value=" 추가 " onclick="add_item()">			
-		<button type="submit" id="submit" class="btn btn-primary" style="float: right;">입력</button>
-	</form><br/> -->
+	
+	<!-- 저장 누를 시 생성되는 modal창 -->
 	<div class="container">
 		<input id="modalBtn" type="hidden" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" value="modal"/>
 		<!-- modal창 -->
@@ -109,15 +90,17 @@
 		</div>
 	</div>
 
+	<!-- input창 -->
 	<div>
-    총 갯수 : <span id="showIndex"></span> / 5
+    총 갯수 : <span id="showIndex"></span> / 10
 	</div>
-	<button type="button" id="insertButton" class="btn btn-success">추가</button>
-    <form id="frm" name="frm" action="insertMap" method="post">
-    	<input type="hidden" id="index" name="ind" value=""/>
-    <button type="submit" id="submit" class="btn btn-primary" style="float: right;">저장</button>
+	<button type="button" id="insertButton" class="btn btn-success" style="float: right;">추가</button>	
+    <form id="frm" name="frm" action="insertMap" method="post">    	
+    	<input type="hidden" id="index" name="placecount" value=""/>
+    	<button type="submit" id="submit" class="btn btn-primary" style="float: right;">저장</button>   	    	    	
     </form>
-
+	
+	<!-- 맵 생성 -->
 	<div class="map_wrap">
     	<div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
     	<div id="menu_wrap" class="bg_white">
@@ -139,49 +122,52 @@
 <script>
 
 //latitude, longitude, placeName 값이 들어갈 input창 생성
-
 $(document).ready(function (){
-    var testForm = $("#frm")
+    var Form = $("#frm")
     var index = 0    	
-     $("#insertButton").on("click", function (){
-         if(index == 5){
-            alert("5개 까지만 됩니다.")
+     $("#insertButton").on("click", function (){ 
+         if(index == 10){  // input창 생성 제한
+            alert("10개 까지만 됩니다.")
             return false;
         }
         
         var newDiv = document.createElement("div")
         newDiv.setAttribute("class", "newDiv")
         newDiv.setAttribute("name", "index")
-                   
-        var newInput1 = document.createElement("input")
+        
+        var newInput1 = document.createElement("input") //위도 input
         newInput1.setAttribute("id", "latitude"+index)
         newInput1.setAttribute("type", "hidden")
         newInput1.setAttribute("name", "latitude"+index)
         newInput1.setAttribute("value", "")
-        var newInput2 = document.createElement("input")
+        var newInput2 = document.createElement("input") //경도 input
         newInput2.setAttribute("id", "longitude"+index)
         newInput2.setAttribute("type", "hidden")
         newInput2.setAttribute("name", "longitude"+index)
         newInput2.setAttribute("value", "")
-        var newInput3 = document.createElement("input")
+        var newInput3 = document.createElement("input") //장소명 input
         newInput3.setAttribute("id", "placeName"+index)
         newInput3.setAttribute("type", "text")
         newInput3.setAttribute("name", "placeName"+index)
-        newInput3.setAttribute("value", "")      
-        
-        var removeInput = document.createElement("button")
+        newInput3.setAttribute("value", "")
+        var newInput4 = document.createElement("input") //카테고리 input
+        newInput4.setAttribute("id", "category"+index)
+        newInput4.setAttribute("type", "hidden")
+        newInput4.setAttribute("name", "category"+index)
+        newInput4.setAttribute("value", "")
+         
+        var removeInput = document.createElement("button") //삭제 버튼
         removeInput.setAttribute("type", "button")
         removeInput.setAttribute("id", "removebtn")
         removeInput.setAttribute("class", "btn btn-danger")
         removeInput.textContent = "삭제"
-		
-        
-        	
+		       	
         newDiv.append(newInput1)
 		newDiv.append(newInput2)
-        newDiv.append(newInput3)            
+        newDiv.append(newInput3)
+        newDiv.append(newInput4)
         newDiv.append(removeInput)
-        testForm.append(newDiv)
+        Form.append(newDiv)
         			
         index+=1
         console.log(newDiv);
@@ -189,25 +175,25 @@ $(document).ready(function (){
         $("#index").val(index)
     }) 
 	
-    $(document).on("click", "#removebtn", function () {
+    $(document).on("click", "#removebtn", function () { // 삭제
         $(this).parent(".newDiv").remove()
         resetIndex()
     })
 
-    function resetIndex(){
+    function resetIndex(){ //삭제하면 인덱스 번호도 reset 
         index = 0
-        testForm.children('div').each(function (){
+        Form.children('div').each(function (){
             var target = $(this).children(index)
-            target.attr("id", "latitude"+index)
-            target.attr("id", "longitude"+index)
-            target.attr("id", "placeName"+index)
+            target.attr("id", target.attr("latitude"+index))
+            target.attr("id", target.attr("longitude"+index))
+            target.attr("id", target.attr("placeName"+index))
             index+=1
         })
         $("#showIndex").text(index)
         $("#index").val(index)
     }
 
- $("#insertButton").trigger("click")
+ $("#insertButton").trigger("click") // 추가 버튼
  $("#showIndex").text(index)       	
 });
 
@@ -250,103 +236,6 @@ $(document).ready(function(){
 });
 
 
-
-
-/* $(document).ready(function(){
-	$('#submit').click(function(event){
-		event.preventDefault(); //원래 form의 기능인 submit를 ajax로 처리
-		var json = $("#frm").serialize();
-		console.log(json);
-		$.ajax({
-			type : 'post',
-			url : 'insertMap',
-			contentType : 'application/text; charset=UTF-8',
-			data : json,
-			success : function(data){
-				console.log('성공');
-			},
-			error : function(){
-				console.log('실패');
-			}			
-		});
-	});
-}); */
-
-
-
-// ajax로 json 객체를 controller로 보내서 db 추가
-
-/* $(document).ready(function(){
-	$('#submit').click(function(event){
-		event.preventDefault(); //원래 form의 기능인 submit를 ajax로 처리
-		
-		var frm = $('frm');
-		var latitude = $('#latitude'+index).val();
-		var longitude = $('#longitude'+index).val();
-		var placeName = $('#placeName'+index).val();
-		console.log(latitude);
-		// 선택한 값을 json 형태 자료로 생성
-		var json = {
-				latitude : latitude,
-				longitude : longitude,
-				placeName : placeName,
-		};
-		
-		// ajax로 json 객체를 controller로 보내서 db 추가
-		$.ajax({
-			type : 'post',
-			url : 'insertMap',
-			contentType : 'application/json; charset=UTF-8',
-			data : JSON.stringify(json),
-			success : function(data){			
-			},
-			error : function(){
-				console.log('오류');
-			}
-		});
-	});
-}); */
-
-
-
-
-/* $(document).ready(function(){
-	$('#submit').click(function(event){
-		event.preventDefault(); //원래 form의 기능인 submit를 ajax로 처리
-		
-		var frm = $('frm');
-		var title = $('#title').val();
-		var content = $('#content').val();
-		var latitude = $('#latitude').val();
-		var longitude = $('#longitude').val();
-		var placeName = $('#placeName').val();
-		var placeName2 = $('#placeName2').val();
-	
-		// 선택한 값을 json 형태 자료로 생성
-		var json = {
-				title : title,
-				content : content,
-				latitude : latitude,
-				longitude : longitude,
-				placeName : placeName,
-				placeName2 : placeName2
-		};
-		
-		// ajax로 json 객체를 controller로 보내서 db 추가
-		$.ajax({
-			type : 'post',
-			url : 'insertMap',
-			contentType : 'application/json; charset=UTF-8',
-			data : JSON.stringify(json),
-			success : function(data){			
-			},
-			error : function(){
-				console.log('오류');
-			}
-		});
-	});
-}); */
-
 // 마커를 담을 배열입니다
 var markers = [];
 
@@ -385,11 +274,11 @@ function searchPlaces() {
 // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
 function placesSearchCB(data, status, pagination) {
     if (status === kakao.maps.services.Status.OK) {
-
+    	  	
         // 정상적으로 검색이 완료됐으면
         // 검색 목록과 마커를 표출합니다
         displayPlaces(data);
-
+		
         // 페이지 번호를 표출합니다
         displayPagination(pagination);
 
@@ -408,8 +297,9 @@ function placesSearchCB(data, status, pagination) {
 
 // 검색 결과 목록과 마커를 표출하는 함수입니다
 function displayPlaces(places) {
-	/* console.log(places); */
-
+	
+	console.log(places);
+	
     var listEl = document.getElementById('placesList'), 
     menuEl = document.getElementById('menu_wrap'),
     fragment = document.createDocumentFragment(), //새로운 빈 DocumentFragment 를 생성합니다. DocumentFragment 인터페이스는 부모가 없는 아주 작은 document 객체를 나타냅니다. 
@@ -423,31 +313,50 @@ function displayPlaces(places) {
     // 지도에 표시되고 있는 마커를 제거합니다
     removeMarker();
     
+    
     for ( var i=0; i<places.length; i++ ) {
 
         // 마커를 생성하고 지도에 표시합니다
         var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x), //LatLng - WGS84 좌표 정보를 가지고 있는 객체를 생성한다.
             marker = addMarker(placePosition, i), 
             itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
-              
-
+        
+        var category = places[i].category_group_name; //카테고리 정보를 가지고 있는 객체 생성 
+            
         // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
         // LatLngBounds 객체에 좌표를 추가합니다
         bounds.extend(placePosition); //extend() - 다수의 객체를 하나의 객체로 합치는 merge기능을 수행
-
+        
         // 마커와 검색결과 항목에 click 했을때
         // 해당 장소에 인포윈도우에 장소명을 표시합니다
-        (function(marker, title) {
+        (function(marker, title, category) {
         	//addListener(target, type, handler) - 다음 지도 API 객체에 이벤트를 등록한다. 
         	//target : 이벤트를 지원하는 다음 지도 API 객체, type : 이벤트 이름, handler : 이벤트를 처리할 함수
-            kakao.maps.event.addListener(marker, 'click', function() { 
-            	displayInfowindow(marker, title);            	
+        	
+        	kakao.maps.event.addListener(marker, 'mouseover', function() { //마커에 마우스 올렸을 때
+                displayInfowindow(marker, title); // displayInfowindow()에서 처리
+            });
+
+            kakao.maps.event.addListener(marker, 'mouseout', function() { // 마커에 마우스 치웠을 때 인포창 닫기
+                infowindow.close();
+            });
+            
+            itemEl.onmouseover =  function () { //검색목록에 마우스 올렸을 때
+                displayInfowindow(marker, title); // displayInfowindow()에서 처리
+            };
+
+            itemEl.onmouseout =  function () { // 검색목록에 마우스 치웠을 때 인포창 닫기
+                infowindow.close();
+            };
+        	        	
+            kakao.maps.event.addListener(marker, 'click', function() { // 마커 클릭 시 
+            	inputdata(marker, title, category); // inputdata()에서 처리            	
             });
         	                     
-            itemEl.onclick =  function () {
-                displayInfowindow(marker, title);                
+            itemEl.onclick =  function () { // 검색 목록창 클릭 시
+            	inputdata(marker, title, category); // inputdata()에서 처리                
             }; 
-        })(marker, places[i].place_name);
+        })(marker, places[i].place_name, places[i].category_group_name);
 
         fragment.appendChild(itemEl); //appendChild() - 새로운 노드를 해당 노드의 자식 노드 리스트(child node list)의 맨 마지막에 추가        
     }
@@ -469,16 +378,17 @@ function getListItem(index, places) {
                 '<div class="info">' +
                 '   <h5>' + places.place_name + '</h5>';
 
+            	             
+                
     if (places.road_address_name) {
         itemStr += '    <span>' + places.road_address_name + '</span>' +
                     '   <span class="jibun gray">' +  places.address_name  + '</span>';
     } else {
         itemStr += '    <span>' +  places.address_name  + '</span>'; 
-    }
-                 
+    }                 
       itemStr += '  <span class="tel">' + places.phone  + '</span>' +
-                '</div>';           
-
+                '</div>';       
+                
     el.innerHTML = itemStr;
     el.className = 'item';
 
@@ -545,26 +455,28 @@ function displayPagination(pagination) {
     paginationEl.appendChild(fragment);
 }
 
-
-
-
-
-//검색결과 목록 또는 마커를 클릭했을 때 호출되는 함수입니다
+//검색결과 목록 또는 마커에 마우스 올렸을 때 호출되는 함수입니다
 //인포윈도우에 장소명을 표시합니다
+function displayInfowindow(marker, title) {
+  var content = '<div style="padding:5px;z-index:1;">' + title + '</div>';
 
+  infowindow.setContent(content);
+  infowindow.open(map, marker);
+}
+
+//마커와 검색결과 목록 클릭 시 input에 data 입력
 //input에 insert하기 위한 index번호 생성
 var index = 0
-function displayInfowindow(marker, title) {
-    var content = '<div style="padding:5px;z-index:1;">' + title + '</div>';
-  
+function inputdata(marker, title, category) {
+
+	$('#category'+index).val(category);
 	$('#latitude'+index).val(marker.getPosition().getLat());
     $('#longitude'+index).val(marker.getPosition().getLng());
     $('#placeName'+index).val(title);
     index += 1 //index 번호 장소 선택 마다 1씩증가
 
-    infowindow.setContent(content);
-    infowindow.open(map, marker);
 }
+
 
  // 검색결과 목록의 자식 Element를 제거하는 함수입니다
 function removeAllChildNods(el) {   

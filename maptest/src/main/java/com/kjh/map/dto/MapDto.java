@@ -5,19 +5,22 @@ public class MapDto {
 	private String latitude;
 	private String longitude;
 	private String placeName;
-	private String ind;
+	private String category;
+	private String placecount;
+	
 	public MapDto() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
-	public MapDto(int mId, String latitude, String longitude, String placeName, String ind) {
+	public MapDto(int mId, String latitude, String longitude, String placeName, String category, String placecount) {
 		super();
 		this.mId = mId;
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.placeName = placeName;
-		this.ind = ind;
+		this.category = category;
+		this.placecount = placecount;
 	}
+	
 	public int getmId() {
 		return mId;
 	}
@@ -42,14 +45,18 @@ public class MapDto {
 	public void setPlaceName(String placeName) {
 		this.placeName = placeName;
 	}
-	public String getInd() {
-		return ind;
+	public String getCategory() {
+		return category;
 	}
-	public void setInd(String ind) {
-		this.ind = ind;
+	public void setCategory(String category) {
+		this.category = category;
 	}
-	
-
+	public String getPlacecount() {
+		return placecount;
+	}
+	public void setPlacecount(String placecount) {
+		this.placecount = placecount;
+	}
 	
 
 }

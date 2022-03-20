@@ -12,12 +12,12 @@ public class MapCommand implements WaygCommand {
 
 	@Override
 	public void execute(Model model, HttpServletRequest request) {
-		String index = request.getParameter("ind");
+		String index = request.getParameter("placecount");
 		int j = Integer.parseInt(index);
 		System.out.println("j");
 		for(int i = 0; i < j; i++) {
-
-		MapDto dto = new MapDto(0, request.getParameter("latitude" + i), request.getParameter("longitude" + i), request.getParameter("placeName" + i), request.getParameter("ind"));
+			
+		MapDto dto = new MapDto(0, request.getParameter("latitude" + i), request.getParameter("longitude" + i), request.getParameter("placeName" + i), request.getParameter("category" + i), request.getParameter("placecount"));
 		
 		MapDao mdao = Constant.mdao;
 		
