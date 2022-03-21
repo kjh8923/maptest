@@ -6,7 +6,8 @@ create table maptest(
     longitude varchar2(20) not null,
     placeName varchar2(50) not null,
     placecount varchar2(50) not null,
-    category varchar2(30) not null
+    category varchar2(100) not null
+    address varchar2(50) not null
 );
 
 create SEQUENCE maptest_seq nocache;
