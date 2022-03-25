@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.init.dao.IDao">
+
+<insert id="insertPlanMst" parameterType="com.project.init.dto.PlanMstDto" >
+	INSERT INTO plan_mst (planNum, planName, startDate, endDate, theme) VALUES (plannum_seq.NEXTVAL, #{planName}, #{startDate}, #{endDate}, #{theme})
+	<selectKey resultType="int" keyProperty="planNum" order="AFTER">
+		SELECT plannum_seq.currVal from dual
+	</selectKey>
+</insert>
+
+<select id="selectPlanMst" parameterType="int" resultType="com.project.init.dto.PlanMstDto">
+	SELECT * FROM plan_mst WHERE planNum = #{planNum}
+</select>
+
+<insert id="insertPlanList" parameterType="com.project.init.dto.PlanListDto">
+	INSERT INTO plan_list(PLANNUM, PLANLISTNUM, LATITUDE, LONGITUDE, PLACENAME, CATEGORY, PLACECOUNT, ADDRESS, PLANDETAIL, TRANSPORTATION, STARTTIME, ENDTIME)
+	values(#{planNum}, planlist_seq.NEXTVAL, #{latitude}, #{longitude}, #{placeName}, #{category}, #{placeCount}, #{address}, #{planDetail}, #{transportation}, #{startTime}, #{endTime})
+</insert>
+	
+<select id="selectPlanList" resultType="com.project.init.dto.PlanListDto">
+	SELECT * FROM plan_list
+</select>
+
+<select id="filter" resultType="com.project.init.dto.FilterDto">
+	select latitude, longitude from plan_list where #{value1} = #{value2}
+</select>
+
+</mapper>
