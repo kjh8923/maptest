@@ -2,6 +2,8 @@ package com.project.init.dao;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.project.init.dto.FilterDto;
 import com.project.init.dto.PlanListDto;
@@ -17,5 +19,5 @@ public interface IDao {
 	
 	public ArrayList<PlanListDto> selectPlanList();
 	
-	public ArrayList<FilterDto> filter();
+	public ArrayList<FilterDto> filter(Map<String, String> map);
 }

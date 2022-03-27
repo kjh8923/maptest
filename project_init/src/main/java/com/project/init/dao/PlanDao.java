@@ -1,6 +1,7 @@
 package com.project.init.dao;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
@@ -71,17 +72,13 @@ public class PlanDao implements IDao {
 	}
 
 	@Override
-	public ArrayList<FilterDto> filter() {
+	public ArrayList<FilterDto> filter(Map<String, String> map) {
 		
-		ArrayList<FilterDto> result = (ArrayList)sqlSession.selectList("filter");
+		ArrayList<FilterDto> result = (ArrayList)sqlSession.selectList("filter", map);
 		
 		return result;
 	}
 
-
-
-	
-	
 	
 	
 }

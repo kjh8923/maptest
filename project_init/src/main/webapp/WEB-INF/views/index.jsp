@@ -65,32 +65,14 @@
 					<form id="frm" name="frm" action="insertFilter" method="post">
 						<div class="form-group"> 
 							<select class="main-filter" name="value1">
-								<!-- <option>Select Filter</option> -->
+								<option>Select Filter</option>
 								<option value="category">장소</option>
 								<option value="address">지역</option>
 								<option value="transportation">이동수단</option>
 								<option value="theme">테마</option>
 							</select><br/> 
 							<select class="sub-filter" name="value2">
-								<!-- <option>-------------</option> -->
-								<option value="AT4">관광명소</option>
-								<option value="AD5">숙박</option>
-								<option value="FD6">음식점</option>
-								<option value="CE7">카페</option>
-								<option value="HP8">병원</option>
-								<option value="PM9">약국</option>
-								<option value="MT1">대형마트</option>
-								<option value="CS2">편의점</option>
-								<option value="PS3">어린이집, 유치원</option>
-								<option value="SC4">학교</option>
-								<option value="AC5">학원</option>
-								<option value="PK6">주차장</option>
-								<option value="OL7">주유소, 충전소</option>
-								<option value="SW8">지하철역</option>
-								<option value="BK9">은행</option>
-								<option value="CT1">문화시설</option>
-								<option value="AG2">중개업소</option>
-								<option value="PO3">공공기관</option>
+								<option>-------------</option>
 							</select>
 						</div>
 						<button type="submit" id="submit" class="btn btn-success" style="float: right;">Filter</button>
@@ -190,7 +172,7 @@ mainFilter.onchange = function(){
 	var mainOption = mainFilter.options[mainFilter.selectedIndex].innerText;
 
 var subOption = {
-	/* place : ['관광명소', '숙박', '음식점', '카페', '병원', '약국', '대형마트', '편의점', '어린이집, 유치원', '학교', '학원', '주차장', '주유소, 충전소', '지하철역', '은행', '문화시설', '공공기관'], */
+	place : ['관광명소', '숙박', '음식점', '카페', '병원', '약국', '대형마트', '편의점', '어린이집, 유치원', '학교', '학원', '주차장', '주유소, 충전소', '지하철역', '은행', '문화시설', '공공기관'],
 	address : ['서울', '부산', '제주', '경기', '인천', '강원', '경상', '전라', '충청'],
 	transportation : ['도보', '자가용', '고속/시외/시내버스', '지하철', '자전거', '택시', '전세/관광버스', '차량대여/렌트', '오토바이', '전동킥보드', '비행기', '선박', '기타'],
 	theme : ['방문', '데이트', '가족여행', '친구들과', '맛집탐방', '비즈니스', '소개팅', '미용', '운동', '문화생활', '여가생활']
@@ -280,7 +262,7 @@ $(document).ready(function() {
         }
     	]
     });
-    
+    var markers =[]; // markers를 배열로 선언
     // 데이터를 가져오기 위해 ajax를 사용
     // 데이터를 가져와 마커를 생성하고 클러스터러 객체에 넘겨줍니다
    	$.ajax({
@@ -293,7 +275,7 @@ $(document).ready(function() {
 		},
 		success : function(data) {
 			console.log(data);
-		   	var markers =[]; // markers를 배열로 선언
+		   	
 			for (var i = 0; i < data.length; i++ ) {
 				var marker = new kakao.maps.Marker({  //반복문에서 생성하는 marker 객체를 markers에 추가
 		            map: map, // 마커를 표시할 지도
@@ -311,29 +293,88 @@ $(document).ready(function() {
 		}
 	});
      
-	$('#submit').click(function(e){
+   	$('#submit').click(function(e){
+   		
+   	}); 
+   
+    
+    $('#submit').click(function(e){
 		e.preventDefault();
+		for (var i = 0; i < markers.length; i++) {
+			markers[i].setMap(null);
+		}
 		var value1 = $('.main-filter').val();
-		var value2 = $('.sub-filter').val();
+		var subOption = $('.sub-filter').val();
+		var value2 = subOption;
+		
+		switch(subOption){
+			case "대형마트" : value2 = "MT1";
+			break;
+			case "편의점" : value2 = "CS2";
+			break;
+			case "어린이집, 유치원" : value2 = "PS3";
+			break;
+			case "학교" : value2 = "SC4";
+			break;
+			case "학원" : value2 = "AC5";
+			break;
+			case "주차장" : value2 = "PK6";
+			break;
+			case "주유소, 충전소" : value2 = "OL7";
+			break;
+			case "지하철역" : value2 = "SW8";
+			break;
+			case "은행" : value2 = "BK9";
+			break;
+			case "문화시설" : value2 = "CT1";
+			break;
+			case "중개업소" : value2 = "AG2";
+			break;
+			case "공공기관" : value2 = "PO3";
+			break;
+			case "관광명소" : value2 = "AT4";
+			break;
+			case "숙박" : value2 = "PO3";
+			break;
+			case "음식점" : value2 = "FD6";
+			break;
+			case "카페" : value2 = "CE7";
+			break;
+			case "병원" : value2 = "HP8";
+			break;
+			case "약국" : value2 = "PM9";
+			break;
+		}
+
 		console.log(value1 + "," + value2);
 		$.ajax({
 			url : 'filter',
-			type: 'post',
-			data: {'value1' : value1, 'value2' : value2},
+			type: 'get',
+			data: {"value1" : value1, "value2" : value2},
 			beforeSend: function(xhr){
 	 		   	var token = $("meta[name='_csrf']").attr('content');
 	 			var header = $("meta[name='_csrf_header']").attr('content');
 			        xhr.setRequestHeader(header, token);
 			},
 			success: function(data) {
-				setMarkers(null);
+				console.log(data);
+				
+				for (var i = 0; i < data.length; i++ ) {
+					var marker = new kakao.maps.Marker({  //반복문에서 생성하는 marker 객체를 markers에 추가
+			            map: map, // 마커를 표시할 지도
+			            position: new kakao.maps.LatLng(data[i].latitude, data[i].longitude) // 마커를 표시할 위치
+			        })				
+									
+					markers.push(marker);
+				 }		
+				clusterer.addMarkers(markers); // 클러스터러에 마커들을 추가
+				
 			},
 			error: function(data) {
 				
 			}
-		})
-		
-	})
+		});	
+	});
 	
   
     
