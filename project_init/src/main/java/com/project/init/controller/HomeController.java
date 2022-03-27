@@ -2,6 +2,10 @@ package com.project.init.controller;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,11 +53,16 @@ public class HomeController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/filter", produces="application/json; charset=UTF-8")
-	public ArrayList<FilterDto> filter(Model model){
+	public ArrayList<FilterDto> filter(HttpServletRequest request, Model model){
 		logger.info("filter() in >>>>");
-		ArrayList<FilterDto> filter = dao.filter();
-		model.addAttribute(filter);
-		System.out.println(filter);
+		String value1 = request.getParameter("value1");
+		String value2 = request.getParameter("value2");
+		Map<String, String> map = new HashMap<>();
+		map.put("value1", value1);
+		map.put("value2", value2);
+		ArrayList<FilterDto> filter = dao.filter(map);
+
+		request.setAttribute("filter", filter);
 		return filter;
 	}
 	

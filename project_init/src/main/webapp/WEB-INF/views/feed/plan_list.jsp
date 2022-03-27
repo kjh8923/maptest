@@ -141,116 +141,116 @@ margin-left : 20px;
 <script>
 //latitude, longitude, placeName 값이 들어갈 input창 생성
 $(document).ready(function (){
-var Form = $("#frm")
-var index = 0    	
- $("#insertButton").on("click", function (){ 
-     if(index == 10){  // input창 생성 제한
-        alert("10개 까지만 됩니다.")
-        return false;
-    }
-             
-    var plan_div = "<div class='form-group' id='newDiv' name='index'>" + 
-    			   		"<input id='latitude"+ index + "' type='text' name='latitude"+ index + "' value='' readonly/>" +
-    			   		"<input id='longitude"+ index + "' type='text' name='longitude"+ index + "' value='' readonly/>" +
-    			   		"<input id='category"+ index + "' type='text' name='category"+ index + "' value='' readonly/>" +
-    			   		"<input id='address"+ index + "' type='text' name='address"+ index + "' value='' readonly/>" +
-    			   		"<label for='placeName"+ index + "'>장소</label>" +
-    			   		"<input id='placeName"+ index + "' type='text' name='placeName"+ index + "' value='' readonly/>" +
-    			   		"<label for='startTime"+ index + "'>시간</label>" +
-    			   		"<input type='time' id='startTime"+ index + "' name='startTime"+ index + "' />" +
-    			   		"<input type='time' id='endTime"+ index + "' name='endTime"+ index + "' />" +  
-    			   		"<label for='transportation"+ index + "'>이동수단</label>" +
-    					"<select class='custom-select' id='transportation"+ index + "' name='transportation"+ index + "'>" + 
-    						"<option value='도보'>도보</option>" + 
-    						"<option value='자가용'>자가용</option>" +
-    						"<option value='고속/시외/시내버스'>고속/시외/시내버스</option>" +
-    						"<option value='지하철'>지하철</option>" +
-    						"<option value='자전거'>자전거</option>" +
-    						"<option value='기차'>기차</option>" +
-    						"<option value='택시'>택시</option>" +
-    						"<option value='전세/관광버스'>전세/관광버스</option>" +
-    						"<option value='차량대여/렌트'>차량대여/렌트</option>" +
-    						"<option value='오토바이'>오토바이</option>" +
-    						"<option value='전동킥보드'>전동킥보드</option>" +
-    						"<option value='비행기'>비행기</option>" +
-    						"<option value='선박'>선박</option>" +
-    						"<option value='기타'>기타</option>" +
-    					"</select>" +
-    					"<label for='planDetail"+ index + "'>상세 일정</label>" +
-    					"<textarea id='planDetail"+ index + "' class='form-control' name='planDetail"+ index + "' placeholder='Enter Detail Plan' row='5'></textarea>" +
-    					"<button type='button' id='removebtn' class='btn btn-danger'>삭제</button>" +
-    			    "</div>";
-    			   	
-    Form.append(plan_div)
-       			
-    index+=1
-    $("#showIndex").text(index)
-    $("#index").val(index)
-}) 
+	var Form = $("#frm")
+	  	
+	$("#insertButton").on("click", function (){ 
+	     if(index == 10){  // input창 생성 제한
+	        alert("10개 까지만 됩니다.")
+	        return false;
+	    }
+	             
+	    var plan_div = "<div class='form-group' id='newDiv' name='index'>" + 
+	    			   		"<input id='latitude"+ index + "' type='text' name='latitude"+ index + "' value='' readonly/>" +
+	    			   		"<input id='longitude"+ index + "' type='text' name='longitude"+ index + "' value='' readonly/>" +
+	    			   		"<input id='category"+ index + "' type='text' name='category"+ index + "' value='' readonly/>" +
+	    			   		"<input id='address"+ index + "' type='text' name='address"+ index + "' value='' readonly/>" +
+	    			   		"<label for='placeName"+ index + "'>장소</label>" +
+	    			   		"<input id='placeName"+ index + "' type='text' name='placeName"+ index + "' value='' readonly/>" +
+	    			   		"<label for='startTime"+ index + "'>시간</label>" +
+	    			   		"<input type='time' id='startTime"+ index + "' name='startTime"+ index + "' />" +
+	    			   		"<input type='time' id='endTime"+ index + "' name='endTime"+ index + "' />" +  
+	    			   		"<label for='transportation"+ index + "'>이동수단</label>" +
+	    					"<select class='custom-select' id='transportation"+ index + "' name='transportation"+ index + "'>" + 
+	    						"<option value='도보'>도보</option>" + 
+	    						"<option value='자가용'>자가용</option>" +
+	    						"<option value='고속/시외/시내버스'>고속/시외/시내버스</option>" +
+	    						"<option value='지하철'>지하철</option>" +
+	    						"<option value='자전거'>자전거</option>" +
+	    						"<option value='기차'>기차</option>" +
+	    						"<option value='택시'>택시</option>" +
+	    						"<option value='전세/관광버스'>전세/관광버스</option>" +
+	    						"<option value='차량대여/렌트'>차량대여/렌트</option>" +
+	    						"<option value='오토바이'>오토바이</option>" +
+	    						"<option value='전동킥보드'>전동킥보드</option>" +
+	    						"<option value='비행기'>비행기</option>" +
+	    						"<option value='선박'>선박</option>" +
+	    						"<option value='기타'>기타</option>" +
+	    					"</select>" +
+	    					"<label for='planDetail"+ index + "'>상세 일정</label>" +
+	    					"<textarea id='planDetail"+ index + "' class='form-control' name='planDetail"+ index + "' placeholder='Enter Detail Plan' row='5'></textarea>" +
+	    					"<button type='button' id='removebtn' class='btn btn-danger'>삭제</button>" +
+	    			    "</div>";
+	    			   	
+	    Form.append(plan_div)
+	       			
+	    index+=1
+	    $("#showIndex").text(index)
+	    $("#index").val(index)
+	}) 
 
-$(document).on("click", "#removebtn", function () { // 삭제
-    $(this).parent("#newDiv").remove()
-    resetIndex()
-})
+	$(document).on("click", "#removebtn", function () { // 삭제
+	    $(this).parent("#newDiv").remove()
+	    resetIndex()
+	})
 
-function resetIndex(){ //삭제하면 인덱스 번호도 reset 
-    index = 0
-    Form.children('div').each(function (){
-        var target = $(this).children(index)
-        target.attr("id", target.attr("latitude"+index))
-        target.attr("id", target.attr("longitude"+index))
-        target.attr("id", target.attr("category"+index))
-        target.attr("id", target.attr("address"+index))
-        target.attr("id", target.attr("placeName"+index))
-        target.attr("id", target.attr("startTime"+index))
-        target.attr("id", target.attr("endTime"+index))
-        target.attr("id", target.attr("transportation"+index))
-        target.attr("id", target.attr("planDetail"+index))
-        index+=1
-    })
-    $("#showIndex").text(index)
-    $("#index").val(index)
-}
+	function resetIndex(){ //삭제하면 인덱스 번호도 reset 
+	    index = 0
+	    Form.children('div').each(function (){
+	        var target = $(this).children(index)
+	        target.attr("id", target.attr("latitude"+index))
+	        target.attr("id", target.attr("longitude"+index))
+	        target.attr("id", target.attr("category"+index))
+	        target.attr("id", target.attr("address"+index))
+	        target.attr("id", target.attr("placeName"+index))
+	        target.attr("id", target.attr("startTime"+index))
+	        target.attr("id", target.attr("endTime"+index))
+	        target.attr("id", target.attr("transportation"+index))
+	        target.attr("id", target.attr("planDetail"+index))
+	        index+=1
+	    })
+	    $("#showIndex").text(index)
+	    $("#index").val(index)
+	}
 
-$("#insertButton").trigger("click") // 추가 버튼
-$("#showIndex").text(index)       	
+	$("#insertButton").trigger("click") // 추가 버튼
+	$("#showIndex").text(index)       	
 });
 
 $(document).ready(function(){ 
-$("#frm").submit(function(event){ //#frm의 data 전체를 ajax로 서버에 보내기
-	event.preventDefault(); //원래 form의 기능인 submit를 ajax로 처리
-	$.ajax({
-		type : $("#frm").attr("method"),
-		url : $("#frm").attr("action"),
-		data : $("#frm").serialize(),
-	    beforeSend: function(xhr){
- 		   	var token = $("meta[name='_csrf']").attr('content');
- 			var header = $("meta[name='_csrf_header']").attr('content');
-		        xhr.setRequestHeader(header, token);
-		},
-		success : function(data){
-			console.log(data);
-			if(data.search("insert-success") > -1){
-				$(".modal-body").text("작성되었습니다.");
-				$("#modalBtn").trigger("click");
-					$("#closeBtn").click(function(event){
-				});
-			}
-			else{
+	$("#frm").submit(function(event){ //#frm의 data 전체를 ajax로 서버에 보내기
+		event.preventDefault(); //원래 form의 기능인 submit를 ajax로 처리
+		$.ajax({
+			type : $("#frm").attr("method"),
+			url : $("#frm").attr("action"),
+			data : $("#frm").serialize(),
+		    beforeSend: function(xhr){
+	 		   	var token = $("meta[name='_csrf']").attr('content');
+	 			var header = $("meta[name='_csrf_header']").attr('content');
+			        xhr.setRequestHeader(header, token);
+			},
+			success : function(data){
+				console.log(data);
+				if(data.search("insert-success") > -1){
+					$(".modal-body").text("작성되었습니다.");
+					$("#modalBtn").trigger("click");
+						$("#closeBtn").click(function(event){
+					});
+				}
+				else{
+					$(".modal-body").text("다시입력해주세요");
+					$("#modalBtn").trigger("click");
+						$("#closeBtn").click(function(event){
+					});
+				}
+			},
+			error : function(data){
 				$(".modal-body").text("다시입력해주세요");
 				$("#modalBtn").trigger("click");
 					$("#closeBtn").click(function(event){
 				});
-			}
-		},
-		error : function(data){
-			$(".modal-body").text("다시입력해주세요");
-			$("#modalBtn").trigger("click");
-				$("#closeBtn").click(function(event){
-			});
-		}			
+			}			
+		});
 	});
-});
 });
 
 

@@ -1,6 +1,5 @@
 package com.project.init.dto;
 
-import java.sql.Timestamp;
 
 public class PlanListDto {
 	private int planNum;
@@ -108,8 +107,6 @@ public class PlanListDto {
 	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
-	
-
 	
 
 }

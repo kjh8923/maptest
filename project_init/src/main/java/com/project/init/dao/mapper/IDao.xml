@@ -26,8 +26,8 @@
 	SELECT * FROM plan_list
 </select>
 
-<select id="filter" resultType="com.project.init.dto.FilterDto">
-	select latitude, longitude from plan_list where #{value1} = #{value2}
+<select id="filter" resultType="com.project.init.dto.PlanListDto">
+	select * from plan_list where ${value1} = #{value2}
 </select>
 
 </mapper>
