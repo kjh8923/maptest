@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.init.feed.dao.IDao" >
+ 
+<select id="getCalendarEvent" resultType="com.project.init.feed.dto.PlanDto">
+	SELECT planNum, planName, startDate, endDate, eventColor FROM plan_mst
+</select>
+
+<update id="updatePlan" parameterType="com.project.init.feed.dto.PlanDto">
+	UPDATE plan_mst 
+	SET planName = #{planName}, startDate = #{startDate}, endDate = #{endDate} 
+	WHERE planNum = #{planNum}
+</update>
+
+<delete id="deletePlan">
+	DELETE FROM plan_mst WHERE planNum = #{planNum}
+</delete>
+
+<insert id="insertMst" parameterType="com.project.init.feed.dto.PlanDto">
+	INSERT INTO plan_mst (planNum, planName, startDate, endDate, dateCount, eventColor) 
+	VALUES (plan_mst_seq.NEXTVAL, #{planName}, #{startDate}, #{endDate}, #{dateCount}, #{eventColor})
+	<selectKey resultType="int" keyProperty="planNum" order="AFTER">
+		SELECT plan_mst_seq.currVal from dual
+	</selectKey>
+</insert>
+
+
+<insert id="insertDt" parameterType="com.project.init.feed.dto.PlanDto2">
+	INSERT INTO plan_dt
+	
+	VALUES
+		(plan_dt_seq.NEXTVAL,
+		 #{planNum}, 
+		 #{placeName},
+		 #{planDay},
+		 #{planDate},
+ 		 #{startTime},
+ 		 #{endTime},
+ 		 #{latitude},
+		 #{longitude},
+		 #{address},
+		 #{category},
+		 #{transportation},
+		 #{details},
+ 		 #{theme},
+ 		 0)
+		
+</insert>
+
+<select id="selectPlanList" resultType="com.project.init.feed.dto.PlanDto2">
+	SELECT * FROM plan_dt 
+</select>
+
+
+<select id="filter" resultType="com.project.init.feed.dto.PlanDto2">
+	SELECT * FROM PLAN_DT WHERE ${value1} like '%'||#{value2}||'%' 
+</select>
+
+
+</mapper>
+
