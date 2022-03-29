@@ -55,7 +55,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
 <select id="filter" resultType="com.project.init.feed.dto.PlanDto2">
-	SELECT * FROM PLAN_DT WHERE ${value1} like '%'||#{value2}||'%' 
+	SELECT * FROM PLAN_DT WHERE ${value1} = #{value2} and ${value3} like '%'||#{value4}||'%' 
 </select>
 
 

@@ -142,9 +142,13 @@ public class HomeController {
 		logger.info("filter() in >>>>");
 		String value1 = request.getParameter("value1");
 		String value2 = request.getParameter("value2");
+		String value3 = request.getParameter("value3");
+		String value4 = request.getParameter("value4");
 		Map<String, String> map = new HashMap<>();
 		map.put("value1", value1);
 		map.put("value2", value2);
+		map.put("value3", value3);
+		map.put("value4", value4);
 		ArrayList<FilterDto> filter = dao.filter(map);
 
 		request.setAttribute("filter", filter);

@@ -67,21 +67,28 @@
 			<div class="map-filter border rounded p-1">
 				<i class="map-filter-icon fa-solid fa-list-check"></i>
 				<form id="frm" name="frm" action="insertFilter" method="post">
+					<div class="form-group">
+						<!-- <label for="plandate">날짜</label> -->
+						<div class="input-group-append">	<!-- 도움말 위치 표시 클래스 -->
+							<span class="input-group-text">날짜</span>		
+						<input type="date" class="form-control" id="plandate" name="value2" value=""/>
+						</div>
+					</div>
 					<div class="form-group"> 
-						<select id="selbox" class="main-filter custom-select my-1 mr-sm-2" name="value1">
+						<select id="selbox" class="main-filter custom-select my-1 mr-sm-2" name="value3">
 							<option>Select Filter</option>
-							<option value="allmarker">모두보기</option>
-							<option value="plandate">날짜</option>
+							<option value="1">모두보기</option>
 							<option value="category">장소</option>
 							<option value="address">지역</option>
 							<option value="transportation">이동수단</option>
 							<option value="theme">테마</option>
 						</select><br/>
-						<input type="date" id="selboxDirect" name="value2"/>						
-						<select class="sub-filter custom-select my-1 mr-sm-2" name="value2">
+							
+						<select class="sub-filter custom-select my-1 mr-sm-2" name="value4">
 							<option>Select Detail Filter</option>
-						</select>		 
-					</div>
+						</select>
+								 
+					</div>					
 					<button type="submit" id="filterbtn" class="btn btn-success" style="float: right;">Filter</button>
 				</form>
 			</div>
@@ -175,41 +182,6 @@ $(document).ready(function() {
 		$('#modalBtn').trigger('click');
 	})
 });
-
-
-
-$(function(){
-
-      //직접입력 인풋박스 기존에는 숨어있다가
-
-$("#selboxDirect").hide();
-
-
-
-$("#selbox").change(function() {
-
-		
-
-                //직접입력을 누를 때 나타남
-
-		if($("#selbox").val() == "plandate") {
-
-			$("#selboxDirect").show();
-
-		}  else {
-
-			$("#selboxDirect").hide();
-
-		}
-
-		
-
-	}) 
-
-	
-
-});
-
 
 //메인 필터객체 생성
 var mainFilter = document.querySelector('.main-filter');
@@ -340,84 +312,108 @@ $.ajax({
 
 $('#filterbtn').click(function(e){
 	e.preventDefault();
-
-	var value1 = $('.main-filter').val();
+	
+	console.log($("#plandate").val());
+	
+	var value1;
+	var value2;
+	
+  	if($("#plandate").val() == ""){
+  		value1 = "1";
+		value2 = "1";
+	}
+  	else{
+  		value1 = "plandate";
+  		value2 = $("#plandate").val();
+  	}
+	
+	var value3 = $('.main-filter').val();
 	var subOption = $('.sub-filter').val();
-	var value2 = subOption;
+	var value4 = subOption;
 	
 	switch(subOption){
-		case "대형마트" : value2 = "MT1";
+		case "대형마트" : value4 = "MT1";
 		break;
-		case "편의점" : value2 = "CS2";
+		case "편의점" : value4 = "CS2";
 		break;
-		case "어린이집, 유치원" : value2 = "PS3";
+		case "어린이집, 유치원" : value4 = "PS3";
 		break;
-		case "학교" : value2 = "SC4";
+		case "학교" : value4 = "SC4";
 		break;
-		case "학원" : value2 = "AC5";
+		case "학원" : value4 = "AC5";
 		break;
-		case "주차장" : value2 = "PK6";
+		case "주차장" : value4 = "PK6";
 		break;
-		case "주유소, 충전소" : value2 = "OL7";
+		case "주유소, 충전소" : value4 = "OL7";
 		break;
-		case "지하철역" : value2 = "SW8";
+		case "지하철역" : value4 = "SW8";
 		break;
-		case "은행" : value2 = "BK9";
+		case "은행" : value4 = "BK9";
 		break;
-		case "문화시설" : value2 = "CT1";
+		case "문화시설" : value4 = "CT1";
 		break;
-		case "중개업소" : value2 = "AG2";
+		case "중개업소" : value4 = "AG2";
 		break;
-		case "공공기관" : value2 = "PO3";
+		case "공공기관" : value4 = "PO3";
 		break;
-		case "관광명소" : value2 = "AT4";
+		case "관광명소" : value4 = "AT4";
 		break;
-		case "숙박" : value2 = "PO3";
+		case "숙박" : value4 = "PO3";
 		break;
-		case "음식점" : value2 = "FD6";
+		case "음식점" : value4 = "FD6";
 		break;
-		case "카페" : value2 = "CE7";
+		case "카페" : value4 = "CE7";
 		break;
-		case "병원" : value2 = "HP8";
+		case "병원" : value4 = "HP8";
 		break;
-		case "약국" : value2 = "PM9";
+		case "약국" : value4 = "PM9";
 		break;
-		case "All Places" : value2 = "0";
+		case "All Places" : value4 = "1";
 		break;
 	}
-	console.log(value1 + "," + value2);
+	console.log(value1 + "," + value2 + "," + value3 + "," + value4);
 	
 	
 	clusterer.clear();
+	
 	$.ajax({
 		url : 'filter',
 		type: 'get',
-		data: {"value1" : value1, "value2" : value2},
+		data: {"value1" : value1, "value2" : value2, "value3" : value3, "value4" : value4},
 		beforeSend: function(xhr){
  		   	var token = $("meta[name='_csrf']").attr('content');
  			var header = $("meta[name='_csrf_header']").attr('content');
 		        xhr.setRequestHeader(header, token);
 		},
 		success: function(data) {
-			console.log(data);
+			console.log(data);			
 			var markers =[]; // markers를 배열로 선언
+			var polyline = [];
 			for (var i = 0; i < data.length; i++ ) {
 				var marker = new kakao.maps.Marker({  //반복문에서 생성하는 marker 객체를 markers에 추가
 		            map: map, // 마커를 표시할 지도
 		            position: new kakao.maps.LatLng(data[i].latitude, data[i].longitude) // 마커를 표시할 위치
-		        })				
-								
+		        })
+				polyline.push(new kakao.maps.LatLng(data[i].latitude, data[i].longitude));
 				markers.push(marker);
-			 }		
-			clusterer.addMarkers(markers); // 클러스터러에 마커들을 추가
-			
+				
+				console.log(polyline);
+				var linePath = new kakao.maps.Polyline({
+					path : polyline,
+					strokeWeight : 3,
+					strokeColor : 'blue',
+					strokeStyle : 'solid'
+				});
+			 }
+
+			linePath.setMap(map);
+			clusterer.addMarkers(markers); // 클러스터러에 마커들을 추가		
 		},
 		error: function(data) {
 			
 		}
 	});	
 });
-
 
 
 // 마커 클러스터러에 클릭이벤트를 등록합니다

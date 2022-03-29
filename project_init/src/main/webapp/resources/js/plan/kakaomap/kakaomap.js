@@ -81,7 +81,6 @@ function displayPlaces(places) {
 	        marker = addMarker(placePosition, i), 
 	        itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
 			
-			console.log(places[i]);
 			
 	    // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
 	    // LatLngBounds 객체에 좌표를 추가합니다
@@ -233,8 +232,6 @@ infowindow.open(map, marker);
 }
 
 //마커와 검색결과 목록 클릭 시 input에 data 입력
-//input에 insert하기 위한 index번호 생성
-
 function inputdata(marker, target1, value, title, category, address) {
 
 	if ( value > 9 ) {
@@ -336,11 +333,27 @@ function inputdata(marker, target1, value, title, category, address) {
 
 	target1.attr('data-count', Number(value) + 1);					
 	target1.parent().siblings('p.mt-2').children('.showIndex').text(Number(value) + 1);
+	
+	var imageSrc = 'images/marker4.png', // 마커이미지의 주소입니다    
+    imageSize = new kakao.maps.Size(50, 50), // 마커이미지의 크기입니다
+    imageOption = {offset: new kakao.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+	
+	var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition = new kakao.maps.LatLng(marker.getPosition().getLat(), marker.getPosition().getLng()); // 마커가 표시될 위치입니다
+	
+	var marker = new kakao.maps.Marker({
+	  position: markerPosition,
+	  image: markerImage // 마커이미지 설정 
+	});
+	
+	marker.setMap(map);   
 }
+
 
 // 검색결과 목록의 자식 Element를 제거하는 함수입니다
 function removeAllChildNods(el) {   
-while (el.hasChildNodes()) {
-    el.removeChild (el.lastChild);
+	while (el.hasChildNodes()) {
+	    el.removeChild (el.lastChild);
+	}
 }
-}
+
