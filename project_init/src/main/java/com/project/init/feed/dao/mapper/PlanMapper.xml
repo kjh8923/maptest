@@ -44,8 +44,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		 #{category},
 		 #{transportation},
 		 #{details},
- 		 #{theme},
- 		 0)
+ 		 #{theme}
+	      )
 		
 </insert>
 

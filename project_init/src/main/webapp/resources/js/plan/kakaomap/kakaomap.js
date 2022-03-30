@@ -7,7 +7,6 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
 	    level: 3 // 지도의 확대 레벨
 	};
 
-
 //지도를 생성합니다    
 var map = new kakao.maps.Map(mapContainer, mapOption);
 
@@ -230,7 +229,7 @@ var content = '<div style="padding:5px;z-index:1;">' + title + '</div>';
 infowindow.setContent(content);
 infowindow.open(map, marker);
 }
-
+var i=0;
 //마커와 검색결과 목록 클릭 시 input에 data 입력
 function inputdata(marker, target1, value, title, category, address) {
 
@@ -320,8 +319,7 @@ function inputdata(marker, target1, value, title, category, address) {
 
 	var target2 = target1.children('.detail' + value);
 	var target3 = target1.children('.detail' + value).children('.inputbox');
-	
-	
+		
 	target3.children('input[name=planDay]').val(target1.attr('data-day'));
 	target3.children('input[name=planDate]').val(target1.attr('data-date'));
 	target2.children('input[name=placeName]').val(title);
@@ -329,24 +327,39 @@ function inputdata(marker, target1, value, title, category, address) {
 	target3.children('input[name=longitude]').val(marker.getPosition().getLng());
 	target3.children('input[name=address]').val(address);
 	target3.children('input[name=category]').val(category);
-
-
+	
 	target1.attr('data-count', Number(value) + 1);					
 	target1.parent().siblings('p.mt-2').children('.showIndex').text(Number(value) + 1);
 	
+	//클릭한 마커에 임의로 지정한 마커 생성
 	var imageSrc = 'images/marker4.png', // 마커이미지의 주소입니다    
     imageSize = new kakao.maps.Size(50, 50), // 마커이미지의 크기입니다
     imageOption = {offset: new kakao.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
 	
 	var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
-    markerPosition = new kakao.maps.LatLng(marker.getPosition().getLat(), marker.getPosition().getLng()); // 마커가 표시될 위치입니다
+    markerPosition = new kakao.maps.LatLng(target3.children('input[name=latitude]').val(), target3.children('input[name=longitude]').val()); // 마커가 표시될 위치입니다
+	
+	console.log(markerPosition);
 	
 	var marker = new kakao.maps.Marker({
 	  position: markerPosition,
-	  image: markerImage // 마커이미지 설정 
+	  image: markerImage, // 마커이미지 설정	 
 	});
 	
-	marker.setMap(map);   
+	
+		
+	marker.setZIndex(i);	
+	
+	marker.setMap(map);
+ 	
+	i+=1		
+	console.log(marker.getZIndex());
+	
+	
+	$(document).on('click', '.deleteBtn', function() {
+		marker.setMap(null);
+	});
+
 }
 
 

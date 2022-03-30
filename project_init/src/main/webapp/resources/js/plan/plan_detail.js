@@ -66,19 +66,26 @@ $(document).ready(function() {
 			})
 		})
 	});
+
 	
 	$(document).on('click', '.deleteBtn', function() {
 		var target = $(this).parent().parent('form');
 		var delValue = Number(target.attr('data-count')) - 1 ;
-		
+		console.log(delValue);
 		if ( delValue == 0 ) {
 			
 			return false;
 		}
-		
+			
+/*		var target2 = $('#map').children('div').children('div').children('div').children('div').children('div.z-index', 1);
+		console.log(target2);
+		target2.remove();*/
+			
+				
 		target.attr('data-count', delValue);
 		target.parent().siblings('p.mt-2').children('.showIndex').text(delValue);
 		$(this).parent().remove();
+		
 	});
 					
 	$(document).on('click', '.detailBtn', function() {

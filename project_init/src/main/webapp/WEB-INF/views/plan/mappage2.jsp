@@ -18,7 +18,6 @@ pageEncoding="UTF-8"%>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=92b6b7355eb56122be94594a5e40e5fd&libraries=services"></script>
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=92b6b7355eb56122be94594a5e40e5fd"></script>
 <script type="text/javascript" src="js/plan/plan_detail.js"></script>
 <link rel="stylesheet" type="text/css" href="css/plan/kakaomap/kakaomap.css" />
 <link rel="stylesheet" type="text/css" href="css/plan/plan_detail.css" />

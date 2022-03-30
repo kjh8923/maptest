@@ -169,8 +169,8 @@ public class PlanDAO implements IDao {
 										  category[i],
 										  transportation[i],
 										  details[i],
-										  theme[i], 
-										  1);
+										  theme[i] 
+										  );
 
 			int res2 = sqlSession.insert("insertDt", dtDto);
 			result = res2 > 0 ? "success": "failed";
