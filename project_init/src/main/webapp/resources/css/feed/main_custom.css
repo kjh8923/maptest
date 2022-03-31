@@ -1,0 +1,161 @@
+/* �럹�씠吏� �쟾泥� �뒪�겕濡ㅻ컮 �꽕�젙 */
+
+body::-webkit-scrollbar {
+    width: 10px;  /* �뒪�겕濡ㅻ컮�쓽 �꼫鍮� */
+}
+
+body::-webkit-scrollbar-thumb {
+    background: #A0A0A0 ; /* �뒪�겕濡ㅻ컮�쓽 �깋�긽 */
+    border-radius: 15px;
+}
+
+body::-webkit-scrollbar-track {
+    background: #CCCCCC;  /*�뒪�겕濡ㅻ컮 �뮮 諛곌꼍 �깋�긽*/
+}
+
+/* 硫붾돱諛붿� section媛� margin 議곗젙 */
+section.container {
+	margin-top: 5em;
+}
+
+/* 媛곴컖�쓽 �뵾�뱶�럹�씠吏�濡� �꽆�뼱媛��뒗 tab-box */
+.feed-tabs {
+	border-top: 1px solid #dee2e6;
+	border-bottom: none;
+}
+
+.feed-tabs .nav-item {
+	font-size: 1.5rem;
+	text-align: center;
+}
+
+/* �꽑�깮�맂 �꺆 �깋�긽, hover �깋�긽 */
+.feed-tabs .nav-item.active {
+	background-color: #403D3D;
+}
+
+.feed-tabs .nav-item.active:hover,
+.feed-tabs .nav-item.active .nav-link,
+.feed-tabs .nav-item.active .nav-link:hover {
+	background-color: #403D3D;	
+	color: white;
+	text-decoration : none;
+}
+
+/* �꽑�깮�릺吏� �븡�� �꺆 �깋�긽, hover �깋�긽 */
+.feed-tabs .nav-item .nav-link {
+	color: #ABABAB;
+	border : none;
+}
+
+.feed-tabs .nav-item:hover,
+.feed-tabs .nav-item .nav-link:hover {
+	color: white;
+	background-color: #D6D6D6 ;
+}
+
+
+
+/* �떖�젰 愿��젴 */
+/* �깉濡� �깮�꽦�맂 �씠踰ㅽ듃 釉붾윮 �뀒�몢由� */
+.fc-event {
+	border-color: white;
+}
+
+/* �넗�슂�씪, �씪�슂�씪 湲��뵪�깋 蹂�寃� */
+.fc-day-sat>div, .fc-day-sat>div>div {
+	color : blue;
+}
+.fc-day-sun>div, .fc-day-sun>div>div {
+	color : red;
+}
+
+/* �떖�젰 �뒪�겕濡ㅻ컮 �꽕�젙 */
+.fc-scroller::-webkit-scrollbar,
+.plan-details > #details::-webkit-scrollbar {
+    width: 5px;  /* �뒪�겕濡ㅻ컮�쓽 �꼫鍮� */
+}
+
+.fc-scroller::-webkit-scrollbar-thumb,
+.plan-details > #details::-webkit-scrollbar-thumb {
+    background: #A0A0A0 ; /* �뒪�겕濡ㅻ컮�쓽 �깋�긽 */
+    border-radius: 15px;
+}
+
+.fc-scroller::-webkit-scrollbar-track,
+.plan-details > #details::-webkit-scrollbar-track {
+    background: #CCCCCC;  /*�뒪�겕濡ㅻ컮 �뮮 諛곌꼍 �깋�긽*/
+}
+
+
+.modal-dialog {
+	height : 100%;
+}
+
+.modal-content {
+	height : 40%;
+}
+
+#modalCloseBtn {
+	font-size: 3rem;
+	cursor: pointer;
+}
+
+.modal-body #modify_form {
+	width: 100%;
+}
+
+
+.modal-body .detail-days #plan-day {
+	font-size: 30px;
+	font-weight: 600;
+}
+
+.modal-body .plan-details {
+	height: 700px;
+}
+
+.modal-body .plan-details #map {
+	height: 100%;
+}
+
+.modal-body .plan-details div[id^=details] {
+	height: 100%;
+	overflow : auto;
+	display: none;
+}
+
+.modal-body .plan-details div[id^=details].active {
+	display: block;
+}
+
+.modal-body .plan-details div[id^=details] .list-group-item {
+	height: 10%;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.modal-body .plan-details div[id^=details] .list-group-item h4 {
+	display: inline;
+	width:100%;
+}
+
+.modal-body .plan-details div[id^=details] .list-group-item h6 {
+	font-weight: 400;
+	width: 50%;
+}
+
+.body-container #feed-header {
+	width: 100%;
+	height : 200px;
+}
+
+.body-container #feed-header #profile-img {
+	width: 180px;
+	height: 180px;
+}
+
+.body-container #feed-header #profile-img .profile-img {
+	font-size: 150px;
+	color: darkblue;
+}
