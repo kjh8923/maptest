@@ -1,6 +1,9 @@
 //마커를 담을 배열입니다
 var markers = [];
 
+var clickedMarkers1 = [], clickedMarkers2 = [], clickedMarkers3 = [], clickedMarkers4 = [], findMarkerArray = [], clickedMarkers6 = [],
+	clickedMarkers7 = [], clickedMarkers8 = [], clickedMarkers9 = [], clickedMarkers10 = [];
+
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
 	mapOption = {
 	    center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
@@ -110,19 +113,25 @@ function displayPlaces(places) {
 	        };
 
 	        kakao.maps.event.addListener(marker, 'click', function() { // 마커 클릭 시
-				var key = $('p.active').parent().data('inputform');
-				var target1 = $('#'+key);
+				// 현재 보여지고 있는 탭 박스의 form을 타겟으로 선언
+				var target1 = $('div.active').children('.inputDiv').children('form');
+				
+				// 타겟의 data-count(상세 일정 개수) value 변수 선언
 				var value = target1.attr('data-count');
 
-				inputdata(marker, target1, value, title, category, address);// inputdata()에서 처리
+				// inputdata()에서 처리
+				inputdata(marker, target1, value, title, category, address);
 	        });
 	    	                     
 	        itemEl.onclick =  function () { // 검색 목록창 클릭 시
-				var key = $('p.active').parent().data('inputform');
-				var target1 = $('#'+key);
+				// 현재 보여지고 있는 탭 박스의 form을 타겟으로 선언
+				var target1 = $('div.active').children('.inputDiv').children('form');
+				
+				// 타겟의 data-count(상세 일정 개수) value 변수 선언
 				var value = target1.attr('data-count');
-
-				inputdata(marker, target1, value, title, category, address);// inputdata()에서 처리              
+				
+				// inputdata()에서 처리
+				inputdata(marker, target1, value, title, category, address);           
 	        }; 
 	    })(marker, places[i].place_name, places[i].category_group_code, places[i].address_name);
 	
@@ -233,13 +242,16 @@ infowindow.open(map, marker);
 }
 
 //마커와 검색결과 목록 클릭 시 input에 data 입력
-//input에 insert하기 위한 index번호 생성
 function inputdata(marker, target1, value, title, category, address) {
+	// 현재 상세 일정에 추가할 것이므로 일정 개수(value) + 1한 값을 변수로 선언
 	var plusVal = Number(value)+1;
-	if ( value > 10 ) {
+	
+	// 현재 value가 10인 경우, 10개 이상 만들지 못하게 return false
+	if ( value > 9 ) {
 		alert('하루에 열개 이상의 일정을 생성할 수 없습니다.');
 		return false;
 
+	// 현재 value가 1개 이상 10개 미만일 때, 새로운 상세일정 빈 박스를 생성하고 plusVal 변수로 인덱싱
 	} else if ( value != 0 ){
 		var boxHtml = '<div class="detail' + plusVal + ' mt-2 py-2 border bg-light rounded">'
 					+ '<h3 class="font-italic ml-2 d-inline mt-2">Place</h3>'
@@ -293,9 +305,24 @@ function inputdata(marker, target1, value, title, category, address) {
 					+ '</select>'
 					+ '</div>'
 					+ '<!-- transportation -->'
-					+ '<div class="form-group col-12 toggle none">'
-					+ '<label for="transportation">교통수단</label>'
-					+ '<input type="text" class="form-control" name="transportation" value="" />'
+					+ '<div class="form-group col-4 toggle none">'
+					+ '<label for="transportation">이동수단</label>'
+					+ '<select class="custom-select my-1 mr-sm-2" id="transportation" name="transportation">' 
+					+ '<option value="도보" selected>도보</option>'
+					+ '<option value="자가용">자가용</option>'
+					+ '<option value="고속/시외/시내버스">고속/시외/시내버스</option>'
+					+ '<option value="지하철">지하철</option>'
+					+ '<option value="자전거">자전거</option>'
+					+ '<option value="기차">기차</option>'
+					+ '<option value="택시">택시</option>'
+					+ '<option value="전세/관광버스">전세/관광버스</option>'
+					+ '<option value="차량대여/렌트">차량대여/렌트</option>'
+					+ '<option value="오토바이">오토바이</option>'
+					+ '<option value="전동킥보드">전동킥보드</option>'
+					+ '<option value="비행기">비행기</option>'
+					+ '<option value="선박">선박</option>'
+					+ '<option value="기타">기타</option>'
+					+ '</select>'
 					+ '</div>'
 					+ '<!-- details -->'
 					+ '<div class="form-group col-12 toggle none">'
@@ -304,41 +331,36 @@ function inputdata(marker, target1, value, title, category, address) {
 					+ '</div>'
 					+ '</div>'
 					+ '</div>';
+		
+		// form 안에 제일 마지막 child로 박스 생성
 		target1.append(boxHtml);
 
-		var target2 = target1.children('.detail' + plusVal);
-		var target3 = target1.children('.detail' + plusVal).children('.inputbox');
-		
-		
-		target3.children('input[name=planDay]').val(target1.attr('data-day'));
-		target3.children('input[name=planDate]').val(target1.attr('data-date'));
-		target2.children('input[name=placeName]').val(title);
-		target3.children('input[name=latitude]').val(marker.getPosition().getLat());
-		target3.children('input[name=longitude]').val(marker.getPosition().getLng());
-		target3.children('input[name=address]').val(address);
-		target3.children('input[name=category]').val(category);
-	
-	
-		target1.attr('data-count', plusVal);					
-		target1.parent().siblings('p.mt-2').children('.showIndex').text(plusVal);
-		
-	} else {
-		target1.attr('data-count', plusVal);					
-		target1.parent().siblings('p.mt-2').children('.showIndex').text(plusVal);
-
-		
-		var target2 = target1.children('.detail' + plusVal);
-		var target3 = target1.children('.detail' + plusVal).children('.inputbox');
-		
-		
-		target3.children('input[name=planDay]').val(target1.attr('data-day'));
-		target3.children('input[name=planDate]').val(target1.attr('data-date'));
-		target2.children('input[name=placeName]').val(title);
-		target3.children('input[name=latitude]').val(marker.getPosition().getLat());
-		target3.children('input[name=longitude]').val(marker.getPosition().getLng());
-		target3.children('input[name=address]').val(address);
-		target3.children('input[name=category]').val(category);
 	}
+	
+	// 맵에서 나온 값을 입력할 .detail 박스
+	var target2 = target1.children('.detail' + plusVal);
+	
+	// 위에서 생성한 .detail 박스안에 input이 들어있는 박스
+	var target3 = target1.children('.detail' + plusVal).children('.inputbox');
+
+	// detail박스에 placeName input에 marker의 title 입력
+	target2.children('input[name=placeName]').val(title);
+
+	// 맵에서 나오는 정보를 갖는 input에 해당 데이터 모두 입력
+	target3.children('input[name=latitude]').val(marker.getPosition().getLat());
+	target3.children('input[name=longitude]').val(marker.getPosition().getLng());
+	
+	target3.children('input[name=address]').val(address);
+	target3.children('input[name=category]').val(category);
+
+	// form에 attr를 이용하여 planDay, planDate 입력
+	target3.children('input[name=planDay]').val(target1.attr('data-day'));
+	target3.children('input[name=planDate]').val(target1.attr('data-date'));
+
+	// form attr를 +1하고, 현재 일정 개수를 표시해주는 텍스트도 변경
+	target1.attr('data-count', plusVal);					
+	target1.parent().siblings('p.mt-2').children('.showIndex').text(plusVal);
+	
 	
 	//클릭한 마커에 임의로 지정한 마커 생성
 	var imageSrc = 'images/marker.png', // 마커이미지의 경로    
@@ -346,96 +368,22 @@ function inputdata(marker, target1, value, title, category, address) {
     imageOption = {offset: new kakao.maps.Point(10, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
 	
 	var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption), //마커 이미지 옵션을 markerImage객체에 담기
-    markerPosition = new kakao.maps.LatLng(target3.children('input[name=latitude]').val(), target3.children('input[name=longitude]').val()); // 마커가 표시될 위치입니다
+    markerPosition = new kakao.maps.LatLng(marker.getPosition().getLat(), marker.getPosition().getLng()); // 마커가 표시될 위치입니다
 	
 	var marker = new kakao.maps.Marker({ //설정한 좌표와 이미지 마커 객체에 담기
 	  position: markerPosition, //마커 좌표 설정
 	  image: markerImage, // 마커이미지 설정	 
 	});
-		
+
 	marker.setMap(map); // 마커를 맵에 생성
 	
-	$('.deleteBtn').click(function() {
-		
-		var latitude = $(this).siblings('div').children('input[name=latitude]').val(); // 디테일 일정 안에 있는 위도 
-		var longitude = $(this).siblings('div').children('input[name=longitude]').val(); // 디테일 일정 안에 있는 경도
-		position = new kakao.maps.LatLng(latitude, longitude); // 디테일 일정 안에 있는 좌표 값 객체에 담기
+	// 현재 작성중인 planDay를 변수로 선언
+	var planDay = target1.attr('data-day');
+	
+	// 현재 작성중인 planDay에 맞는 배열에 marker를 저장
+	addMarkerArray(planDay, marker);
 
-		if(markerPosition.equals(position)){ // 맵에 생성한 마커의 좌표와 디테일 일정 안에 있는 좌표값이 같은 마커
-			marker.setMap(null); // 맵에서 제거
-		}
-		
-		deletebox($(this));
-
-	});
-		
 }
-
-function deletebox(element) {
-	// 삭제된 상세일정의 planDtNum을 '/'를 구분자로 input에 쌓아둔다.
-	let deleteDtNum = element.siblings('.inputbox').children('input[name=planDtNum]').val();
-	let dtInputValue = $('#frm0 input[name=deleteDtNum]').val();
-	
-	// input에 value가 없으면 구분자 없이 입력하고 아니면 prefix '/'를 덧붙인다.
-	if ( dtInputValue == "" ) {
-		$('#frm0 input[name=deleteDtNum]').val(deleteDtNum);
-	} else {
-		$('#frm0 input[name=deleteDtNum]').val(dtInputValue + '/' + deleteDtNum);
-	}
-	
-	let target = element.parent().parent('form');
-	let currValue = Number(target.attr('data-count'));
-	let delValue = Number(target.attr('data-count')) - 1 ;
-	let index = Number(element.parent().index()) + 1;
-
-	if ( delValue < 0 ) {
-		alert('최소 1개 이상의 일정이 필요합니다');
-		return false;
-		
-	} else if ( delValue < 1 ) {
-		element.siblings('input[name=placeName]').val('');
-		
-		var inputBox = element.siblings('.inputbox');
-		
-		inputBox.children('input[name=planDtNum]').val('0');
-		inputBox.children('input[name=placeName]').val('');
-		inputBox.children('input[name=latitude]').val('');
-		inputBox.children('input[name=longitude]').val('');
-		inputBox.children('input[name=address]').val('');
-		inputBox.children('input[name=category]').val('');
-		inputBox.children('.form-group').children('input[name=startTime]').val('');			
-		inputBox.children('.form-group').children('input[name=endTime]').val('');
-		inputBox.children('.form-group').children('select[name=theme]').val('방문');
-		inputBox.children('.form-group').children('input[name=transportation]').val('');
-		inputBox.children('.form-group').children('input[name=details]').val('');
-
-		target.attr('data-count', delValue);
-		target.parent().siblings('p.mt-2').children('.showIndex').text(delValue);
-	
-	} else {
-		
-		console.log(index);
-		console.log(currValue);
-		for ( var i = Number(index); i <= currValue; i++ ) {
-			if ( i == Number(index) ) {
-				target.attr('data-count', delValue);
-				target.parent().siblings('p.mt-2').children('.showIndex').text(delValue);					
-
-			} else {
-				var box = $('.detail' + i);
-				var delBtn = box.children('.deleteBtn');
-	
-				box.removeClass('detail' + i);
-				box.addClass('detail' + (i-1));
-		
-				target.attr('data-count', delValue);
-				target.parent().siblings('p.mt-2').children('.showIndex').text(delValue);
-			}
-			element.parent().remove();
-		}
-	}
-};
-
 
 // 검색결과 목록의 자식 Element를 제거하는 함수입니다
 function removeAllChildNods(el) {   
@@ -443,3 +391,103 @@ function removeAllChildNods(el) {
 	    el.removeChild (el.lastChild);
 	}
 }
+
+// 마커를 각 일정에 맞는 배열에 저장하는 메서드
+function addMarkerArray(planDay, marker) {
+	
+	if ( planDay == 'day1' ) {
+		clickedMarkers1.push(marker);
+		
+	} else if ( planDay == 'day2' ) {
+		clickedMarkers2.push(marker);
+		
+	} else if ( planDay == 'day3' ) {
+		clickedMarkers3.push(marker);
+		
+	} else if ( planDay == 'day4' ) {
+		clickedMarkers4.push(marker);
+		
+	} else if ( planDay == 'day5' ) {
+		clickedMarkers5.push(marker);
+		
+	} else if ( planDay == 'day6' ) {
+		clickedMarkers6.push(marker);
+		
+	} else if ( planDay == 'day7' ) {
+		clickedMarkers7.push(marker);
+		
+	} else if ( planDay == 'day8' ) {
+		clickedMarkers8.push(marker);
+		
+	} else if ( planDay == 'day9' ) {
+		clickedMarkers9.push(marker);
+		
+	} else if ( planDay == 'day10' ) {
+		clickedMarkers10.push(marker);
+	}
+};
+
+
+// 마커를 삭제하는 메서드
+function removeMarkerArray(planDay, index) {
+	if ( planDay == 'day1' ) {
+		if ( index >= 0 ) {
+			clickedMarkers1[index].setMap(null);
+			clickedMarkers1.splice(index, 1);
+		}
+	} else if ( planDay == 'day2' ) {
+		if ( index >= 0 ) {
+			clickedMarkers2[index].setMap(null);
+			clickedMarkers2.splice(index, 1);
+		}
+		
+	} else if ( planDay == 'day3' ) {
+		if ( index >= 0 ) {
+			clickedMarkers3[index].setMap(null);
+			clickedMarkers3.splice(index, 1);
+		}
+		
+	} else if ( planDay == 'day4' ) {
+		if ( index >= 0 ) {
+			clickedMarkers4[index].setMap(null);
+			clickedMarkers4.splice(index, 1);
+		}
+		
+	} else if ( planDay == 'day5' ) {
+		if ( index >= 0 ) {
+			clickedMarkers5[index].setMap(null);
+			clickedMarkers5.splice(index, 1);
+		}
+		
+	} else if ( planDay == 'day6' ) {
+		if ( index >= 0 ) {
+			clickedMarkers6[index].setMap(null);
+			clickedMarkers6.splice(index, 1);
+		}
+		
+	} else if ( planDay == 'day7' ) {
+		if ( index >= 0 ) {
+			clickedMarkers7[index].setMap(null);
+			clickedMarkers7.splice(index, 1);
+		}
+		
+	} else if ( planDay == 'day8' ) {
+		if ( index >= 0 ) {
+			clickedMarkers8[index].setMap(null);
+			clickedMarkers8.splice(index, 1);
+		}
+		
+	} else if ( planDay == 'day9' ) {
+		if ( index >= 0 ) {
+			clickedMarkers9[index].setMap(null);
+			clickedMarkers9.splice(index, 1);
+		}
+		
+	} else if ( planDay == 'day10' ) {
+		if ( index >= 0 ) {
+			clickedMarkers10[index].setMap(null);
+			clickedMarkers10.splice(index, 1);
+		}
+	}
+};
+

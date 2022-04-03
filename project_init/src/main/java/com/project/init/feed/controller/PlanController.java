@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.project.init.feed.dao.IDao;
+import com.project.init.feed.dao.UserDao;
 import com.project.init.feed.dto.PlanDto;
 import com.project.init.feed.dto.PlanDto2;
+import com.project.init.util.Constant;
 
 
 @Controller
@@ -26,84 +28,62 @@ public class PlanController {
 	
 	@Autowired
 	private IDao dao;
-	
+	private UserDao udao;
+	@Autowired
+	public void setUdao(UserDao udao) {
+		this.udao = udao;
+		Constant.udao = udao;
+	}
 
+	// feed-calendar ���������� ������ ������ dto�� ���� plan �������� �̵�
 	@RequestMapping("")
 	public String planmstDo(PlanDto dto, Model model) {
 		logger.info("planmst.do(" + dto.getPlanName() + ") in >>>>");
-		logger.info(dto.getDateCount());
+
 		model.addAttribute("plan", dto);
-		
+		model.addAttribute("id", Constant.username);
+
 		return "plan/mappage2";
 	}
-		
+	
+	// planDt ������ ��ġ�� db�� insert
 	@ResponseBody
 	@RequestMapping(value = "detail.do", produces = "application/text; charset=UTF-8")
-	public String mappage(HttpServletRequest request, Model model) {
+	public String detailDo(HttpServletRequest request, Model model) {
 		logger.info("detail.do() in >>>>");
 		
-		String result = dao.insertPlanDtDo(request, model);
+		String result = dao.insertPlanDtDo(request, Constant.username, model);
 		
 		return result;
 	}
 
+	
+	// modalâ���� �� ���� ������ ������ ��
 	@RequestMapping("detail_modify")
 	public String detail_modify(String planNum, Model model) {
 		logger.info("detail_modify(" + planNum + ") in >>>>");
 		
-		PlanDto result1= dao.selectPlanMst(planNum);
+		// planNum���� planMst�� planDt�� ������ model�� ��Ƽ� ����
+		PlanDto result1= dao.selectPlanMst(planNum, Constant.username);
 		model.addAttribute("plan1", result1);
-		
 				
-		ArrayList<PlanDto2> result2= dao.selectPlanDt(planNum);
+		ArrayList<PlanDto2> result2= dao.selectPlanDt(planNum, Constant.username);
 		model.addAttribute("plan2", result2);
 		
 		return "plan/plan_modify";
 	}
+	
+	
+	// modalâ���� �� ���� ������ ��ġ�� db insert
 	@ResponseBody
 	@RequestMapping(value="detail_modify.do", produces="application/text; charset=UTF-8")
 	public String detailModifyDo(HttpServletRequest request) {
 		logger.info("detail_modify(" + request.getParameter("planNum") + ") in >>>>");
-
-		String result = dao.detailModifyDo(request);
+		
+		String result = dao.detailModifyDo(request, Constant.username);
 		
 		logger.info("detail_modify(" + request.getParameter("planNum") + ") result : " + result);
 		return result;
 	}
-
-	
-	
-	
-	/*
-
-	
-	
-	@RequestMapping(value="/insertPlanDt.do", produces = "application/text; charset=UTF8")
-	@ResponseBody
-	public String insertPlanDtDo(HttpServletRequest request, HttpServletResponse response, Model model) {
-		logger.info("insertPlanDtDo in >>>>");
-
-		dao.insertPlanDtDo(model, request);
-		
-		return "";
-	}
-	
-	
-	
-	//===== mappage�� form(#frm)���� ���� data insert =====
-	@RequestMapping(value="insertMap", produces = "application/text; charset=UTF8")
-	@ResponseBody
-	public String insertMap(HttpServletRequest request, HttpServletResponse response, Model model) {
-		System.out.println("insertMap");
-		String result = dao.insertMap(model, request);
-		
-		if(result.equals("success"))
-			return "insert-success";
-		else
-			return "insert-failed";
-	}
-	*/
-	
-	
 	
 }

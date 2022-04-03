@@ -19,9 +19,9 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
-<link rel="stylesheet" type="text/css" href="css/header.css" />
-<link rel="stylesheet" type="text/css" href="css/main/main.css" />
-<link rel="stylesheet" type="text/css" href="css/footer.css" />
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/header.css" />
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/main/main.css" />
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/footer.css" />
 <title>Insert title here</title>
 
 </head>
@@ -34,7 +34,6 @@
 <section class="container">
 	<div class="main-body-top d-flex justify-content-between mb-3">
 		<div class="map border rounded p-2" id="map"></div>
-		<!-- 맵 생성 -->
 		<div class="right ml-2">
 			<div class="user-info border rounded mb-2 p-1">
 				<div class="user-info-top d-flex">
@@ -47,7 +46,7 @@
 							<p class="h5">Nickname</p>
 						</div>
 						
-						<button type="button" class="logx-btn btn btn-primary btn-sm">login</button>
+						<button type="button" class="logx-btn btn btn-primary btn-sm" id="loginBtn">login</button>
 					</s:authorize>
 					
 					<s:authorize access="isAuthenticated()">				
@@ -59,7 +58,10 @@
 							<p class="h5">Nickname</p>
 						</div>
 						
-						<button type="button" class="logx-btn btn btn-danger btn-sm">logout</button>
+						<form method="post" action="logout">
+							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+							<button type="submit" id="logoutBtn" class="logx-btn btn btn-danger btn-sm">logout</button>
+						</form>
 					</s:authorize>
 					
 				</div>
@@ -167,6 +169,7 @@
 	</div>	
 </section>
 
+<%@ include file="login_modal.jsp" %>
 <%@ include file="modalPost.jsp" %>
 <%@ include file="footer.jsp" %>
 
@@ -177,7 +180,20 @@ $(document).ready(function() {
 	$('.post').click(function() {
 		console.log($(this).text());
 		$('#modalBtn').trigger('click');
+	});
+	
+	
+	$('#loginBtn').click(function() {
+		console.log($(this).text());
+		$('#loginModalBtn').trigger('click');
+		//location.href="user/login_view";
 	})
+	
+	<c:if test='${not empty error}'>
+		console.log('error');
+		$('#loginError').css('visibility','visible');
+		$('#loginModalBtn').trigger('click');
+	</c:if>
 });
 
 //메인 필터객체 생성
@@ -237,7 +253,7 @@ var clusterer = new kakao.maps.MarkerClusterer({
     map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체 
     averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정 
     minLevel: 10, // 클러스터 할 최소 지도 레벨
-    disableClickZoom: true, // 클러스터 마커를 클릭했을 때 지도가 확대되지 않도록 설정한다
+    disableClickZoom: true, // 클러스터 마커를 클릭했을 때 지도가 확대 되도록 설정한다
     calculator: [10, 20, 30], // 클러스터의 크기 구분 값(10개, 20개, 30개 마다 다르게), 각 사이값마다 설정된 text나 style이 적용된다
     styles: [{ // calculator 각 사이 값 마다 적용될 스타일을 지정한다
         width : '30px', height : '30px',
@@ -387,29 +403,16 @@ $('#filterbtn').click(function(e){
 		success: function(data) {
 			console.log(data);			
 			var markers =[]; // markers를 배열로 선언
-			var polyline = [];
 			for (var i = 0; i < data.length; i++ ) {
 				var marker = new kakao.maps.Marker({  //반복문에서 생성하는 marker 객체를 markers에 추가
 		            map: map, // 마커를 표시할 지도
 		            position: new kakao.maps.LatLng(data[i].latitude, data[i].longitude) // 마커를 표시할 위치
 		        })
-				polyline.push(new kakao.maps.LatLng(data[i].latitude, data[i].longitude));
-				markers.push(marker);
-				
-				console.log(polyline);
-				var linePath = new kakao.maps.Polyline({
-					path : polyline,
-					strokeWeight : 3,
-					strokeColor : 'blue',
-					strokeStyle : 'solid'
-				});
+				markers.push(marker);		
 			 }
-
-			linePath.setMap(map);
 			clusterer.addMarkers(markers); // 클러스터러에 마커들을 추가		
 		},
-		error: function(data) {
-			
+		error: function(data) {			
 		}
 	});	
 });
@@ -426,6 +429,7 @@ kakao.maps.event.addListener(clusterer, 'clusterclick', function(cluster) {
  	// 지도를 클릭된 클러스터의 마커의 위치를 기준으로 확대합니다
     map.setLevel(level, {anchor: cluster.getCenter()});
 });
+
 
 </script>
 

@@ -4,53 +4,41 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.project.init.feed.dao.IDao" >
  
-<select id="getCalendarEvent" resultType="com.project.init.feed.dto.PlanDto">
-	SELECT * FROM plan_mst
+ 
+<select id="getCalendarEvent" parameterType="string" resultType="com.project.init.feed.dto.PlanDto">
+	SELECT * FROM plan_mst WHERE userId = #{userId}
 </select>
 
+
+
+<select id="selectPlanMst" parameterType="com.project.init.feed.dto.PlanDto" resultType="com.project.init.feed.dto.PlanDto">
+	SELECT * 
+	FROM plan_Mst 
+	WHERE planNum = #{planNum}
+	AND userId = #{userId}
+</select>
+
+
+
+<select id="selectPlanDt" parameterType="com.project.init.feed.dto.PlanDto2" resultType="com.project.init.feed.dto.PlanDto2">
+	SELECT * 
+	FROM plan_dt 
+	WHERE planNum = #{planNum}
+	AND userId = #{userId}
+	ORDER BY planDay, startTime ASC
+</select>
+
+
+
 <insert id="insertMst" parameterType="com.project.init.feed.dto.PlanDto">
-	INSERT INTO plan_mst (planNum, planName, startDate, endDate, dateCount, eventColor) 
-	VALUES (plan_mst_seq.NEXTVAL, #{planName}, #{startDate}, #{endDate}, #{dateCount}, #{eventColor})
+	INSERT INTO plan_mst (planNum, userId, planName, startDate, endDate, dateCount, eventColor) 
+	VALUES (plan_mst_seq.NEXTVAL, #{userId}, #{planName}, #{startDate}, #{endDate}, #{dateCount}, #{eventColor})
 	<selectKey resultType="int" keyProperty="planNum" order="AFTER">
 		SELECT plan_mst_seq.currVal from dual
 	</selectKey>
 </insert>
 
-<select id="selectPlanMst" parameterType="int" resultType="com.project.init.feed.dto.PlanDto">
-	SELECT * 
-	FROM plan_Mst 
-	WHERE planNum = #{planNum}
-</select>
 
-
-<select id="selectPlanDt" parameterType="int" resultType="com.project.init.feed.dto.PlanDto2">
-	SELECT * 
-	FROM plan_dt 
-	WHERE planNum = #{planNum}
-	ORDER BY planDay, startTime ASC
-</select>
-
-
-<insert id="insertDt" parameterType="com.project.init.feed.dto.PlanDto2">
-	INSERT INTO plan_dt
-	
-	VALUES
-		(plan_dt_seq.NEXTVAL,
-		 #{planNum}, 
-		 #{placeName},
-		 #{placeCount},
-		 #{planDay},
-		 #{planDate},
- 		 #{startTime},
- 		 #{endTime},
- 		 #{theme},
-		 #{latitude},
-		 #{longitude},
-		 #{address},
-		 #{category},
-		 #{transportation},
-		 #{details})
-</insert>
 
 <update id="updatePlanMst" parameterType="com.project.init.feed.dto.PlanDto">
 	UPDATE plan_mst
@@ -63,63 +51,127 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		eventColor = #{eventColor}
 		
 	WHERE planNum = #{planNum}
+	AND userId = #{userId}
 </update>
 
-<update id="updatePlanDt1" parameterType="com.project.init.feed.dto.PlanDto2">
-	UPDATE plan_dt 
-	
-	SET planDate = #{planDtNum}
-		
-	WHERE planNum = #{planNum}
-	AND planDay = #{planDay}
-</update>
 
-<update id="updatePlanDt2" parameterType="com.project.init.feed.dto.PlanDto2">
-	UPDATE plan_dt 
-	
-	SET placeName = #{placeName}, 
-		startTime = #{startTime}, 
-		endTime = #{endTime},
-		theme = #{theme}, 
-		latitude = #{latitude}, 
-		longitude = #{longitude}, 
-		address = #{address}, 
-		category = #{category}, 
-		transportation = #{transportation}, 
-		details = #{details}, 
-		placeCount = #{placeCount}		 
-		
-	WHERE planDtNum = #{planDtNum}
-</update>
 
 <delete id="deletePlanDt1" parameterType="com.project.init.feed.dto.PlanDto2">
 	DELETE FROM plan_dt WHERE planNum = #{planNum} AND planDay = #{planDay}
 </delete>
 
-<delete id="deleteDt" parameterType="java.util.ArrayList">
+
+
+<update id="insertNullDt" parameterType="java.util.List">
+	<foreach collection="list" item="dt" index="index" separator=" " open="INSERT ALL" close="SELECT * FROM dual ">
+	INTO plan_dt
+	(planDtNum, userId, planNum, placeCount, planDay, planDate, theme)
+	VALUES
+		(plan_dt_seq.NEXTVAL,
+		 #{dt.userId},
+		 #{dt.planNum},
+		 #{dt.placeCount},
+		 #{dt.planDay},
+		 #{dt.planDate},
+ 		 #{dt.theme}
+		 )
+	</foreach>
+</update>
+
+
+
+<update id="updatePlanDt1" parameterType="java.util.List">
+	<foreach collection="list" item="dt" index="index" separator=";" open="DECLARE BEGIN" close="; END;">
+		UPDATE plan_dt 
+		
+		SET planDate = #{dt.planDate}
+		
+		WHERE planNum = #{dt.planNum}
+		AND planDay = #{dt.planDay}
+		AND userId = #{dt.userId}
+	</foreach>
+</update>
+
+
+
+
+<delete id="deletePlanMst" parameterType="com.project.init.feed.dto.PlanDto">
+	DELETE FROM plan_Mst WHERE planNum = #{planNum} AND userId = #{userId}
+</delete>
+
+
+
+<delete id="deleteDt" parameterType="java.util.List">
 	DELETE FROM plan_dt
 	<where>
 		<foreach collection="list" item="item" index="index" separator="OR">
-			#{item.value} = #{item.planDtNum}
+			planDtNum = #{item.planDtNum}
+			AND userId = #{item.userId}
 		</foreach>
 	</where>
 </delete>
 
 
 
-<delete id="deletePlanMst" parameterType="int">
-	DELETE FROM plan_Mst WHERE planNum = #{planNum}
+<update id="insertDt" parameterType="java.util.List">
+	<foreach collection="list" item="dt" index="index" separator=" " open="INSERT ALL" close="SELECT * FROM dual ">
+	INTO plan_dt
+	
+	VALUES
+		(plan_dt_seq.NEXTVAL,
+		 #{dt.planNum},
+		 #{dt.userId},
+		 #{dt.placeName},
+		 #{dt.placeCount},
+		 #{dt.planDay},
+		 #{dt.planDate},
+ 		 #{dt.startTime},
+ 		 #{dt.endTime},
+ 		 #{dt.theme},
+		 #{dt.latitude},
+		 #{dt.longitude},
+		 #{dt.address},
+		 #{dt.category},
+		 #{dt.transportation},
+		 #{dt.details})
+	</foreach>
+</update>
+
+
+
+<delete id="deletePlanDt" parameterType="com.project.init.feed.dto.PlanDto2">
+	DELETE FROM plan_dt WHERE planNum = #{planNum} AND userId = #{userId}
 </delete>
 
-<delete id="deletePlanDt" parameterType="int">
-	DELETE FROM plan_dt WHERE planNum = #{planNum}
-</delete>
 
-<select resultType="com.project.init.feed.dto.PlanDto2" id="selectPlanList">
-	SELECT * FROM plan_dt 
+
+
+<update id="updatePlanDt2" parameterType="com.project.init.feed.dto.PlanDto2">
+	<foreach collection="list" item="dt" index="index" separator=";" open="DECLARE BEGIN" close="; END;">
+		UPDATE plan_dt 
+		
+		SET placeName = #{dt.placeName}, 
+			startTime = #{dt.startTime}, 
+			endTime = #{dt.endTime},
+			theme = #{dt.theme}, 
+			latitude = #{dt.latitude}, 
+			longitude = #{dt.longitude}, 
+			address = #{dt.address}, 
+			category = #{dt.category}, 
+			transportation = #{dt.transportation}, 
+			details = #{dt.details}, 
+			placeCount = #{dt.placeCount}		 
+			
+		WHERE planDtNum = #{dt.planDtNum}
+		AND userId = #{dt.userId}
+	</foreach>
+</update>
+
+<select id="selectPlanList" resultType="com.project.init.feed.dto.PlanDto2">
+	SELECT * FROM plan_dt
 </select>
 
-<select resultType="com.project.init.feed.dto.PlanDto2" id="filter">
+<select id="filter" resultType="com.project.init.feed.dto.PlanDto2">
 	SELECT * FROM PLAN_DT WHERE ${value1} = #{value2} and ${value3} like '%'||#{value4}||'%'
 </select>
 

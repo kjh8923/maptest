@@ -11,13 +11,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.project.init.feed.dao.IDao;
-import com.project.init.feed.dto.CommentDto;
 import com.project.init.feed.dto.PlanDto2;
 
 @Controller
@@ -40,51 +38,8 @@ public class HomeController {
 	public String home() {
 		logger.info("home in >>>");
 		
-		
-		
 		return "home";
 	}
-	
-	@ResponseBody
-	@RequestMapping(value="home/allComments.do", produces="application/json; charset=UTF-8")
-	public ArrayList<CommentDto> allComments() {
-		logger.info("allComments in >>>");
-		
-		ArrayList<CommentDto> result = dao.selectComments();
-		
-		logger.info("allComments result : " + result);
-		return result;
-	}
-	
-	
-	@ResponseBody
-	@RequestMapping(value="home/comment.do", produces="application/text; charset=UTF-8")
-	public String commentDo(@RequestBody CommentDto dto) {
-		logger.info("commentDo in >>>");
-		
-		String result = dao.insertMcomment(dto);
-		
-		logger.info("commentDo result : " + result);
-		return result;
-	}
-	
-	@ResponseBody
-	@RequestMapping(value="home/recomment.do", produces="application/text; charset=UTF-8")
-	public String recommandDo(@RequestBody CommentDto dto) {
-		logger.info("commentDo in >>>");
-		
-		dto.setiNum(dto.getiNum() + 1);
-		
-		String result = dao.insertMcomment(dto);
-		
-		logger.info("commentDo result : " + result);
-		return result;
-	}
-	
-	
-	
-	
-	
 	
 	@RequestMapping("search")
 	public String search(HttpServletRequest request, Model model) {
@@ -153,5 +108,4 @@ public class HomeController {
 		request.setAttribute("filter", filter);
 		return filter;
 	}
-	
 }
