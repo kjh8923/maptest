@@ -132,7 +132,7 @@ section.container {
 }
 
 .modal-body .plan-details div[id^=details] .list-group-item {
-	height: 10%;
+	height: 30%;
 	display: flex;
 	flex-wrap: wrap;
 }

@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +19,6 @@ import org.springframework.ui.Model;
 
 import com.project.init.feed.dto.PlanDto;
 import com.project.init.feed.dto.PlanDto2;
-import com.project.init.util.Constant;
 
 @Component
 public class PlanDAO implements IDao {
@@ -228,15 +226,15 @@ public class PlanDAO implements IDao {
 			// parameter로 넘어온 deleteDtNum을 '/'로 구분하여 배열로 생성
 			String[] deleteDtNum = request.getParameter("deleteDtNum").split("/");
 			
-			Map<String, Object> deleteDtMap = new HashMap<>();
-			
-			List<Map<String, Object>> deleteDtList = new ArrayList<Map<String, Object>>();
+			List<PlanDto2> deleteDtList = new ArrayList<PlanDto2>();
 			
 			
 			for ( int i = 0; i < deleteDtNum.length; i++ ) {
-				deleteDtMap.put("userId", userId);
-				deleteDtMap.put("planDtNum", Integer.parseInt(deleteDtNum[i]));
-				deleteDtList.add(deleteDtMap);
+				PlanDto2 dto = new PlanDto2();
+				dto.setPlanDtNum(Integer.parseInt(deleteDtNum[i]));
+				dto.setUserId(userId);
+				
+				deleteDtList.add(dto);
 			}
 			// myBatis 구문 실행
 			int res = sqlSession.delete("deleteDt", deleteDtList);

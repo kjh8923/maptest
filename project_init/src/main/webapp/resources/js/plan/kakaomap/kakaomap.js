@@ -1,7 +1,7 @@
 //마커를 담을 배열입니다
 var markers = [];
 
-var clickedMarkers1 = [], clickedMarkers2 = [], clickedMarkers3 = [], clickedMarkers4 = [], findMarkerArray = [], clickedMarkers6 = [],
+var clickedMarkers1 = [], clickedMarkers2 = [], clickedMarkers3 = [], clickedMarkers4 = [], clickedMarkers5 = [], clickedMarkers6 = [],
 	clickedMarkers7 = [], clickedMarkers8 = [], clickedMarkers9 = [], clickedMarkers10 = [];
 
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div 

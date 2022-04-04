@@ -10,6 +10,7 @@
 </head>
 <body>
 	<%-- modal 창 --%>
+	
 	<div class="modal fade" id="detailModal" role="dialog">
 		<div class="modal-dialog modal-dialog-centered modal-xl d-block">
 			<%-- modal 창 닫기 버튼 --%>
@@ -82,6 +83,8 @@
 						
 						<%-- 2-3- PlanDt 수정 페이지로 이동 --%>
 						<a href="" id="btn-detail" class="btn btn-sm btn-dark mx-1">상세 수정</a>
+						
+						<button type="button" class="btn btn-primary" id="mbtn">marker</button>
 					</div>
 				
 					<%-- 3- planDay tab button 박스 --%>
@@ -112,6 +115,9 @@
 									<h4 class="placeName col-12 font-italic"></h4>
 									<h6 class="font-italic col-6 startTime"></h6>
 									<h6 class="font-italic col-6 endTime"></h6>
+									<input type="text" id="latitude"/>
+									<input type="text" id="longitude"/>
+									<input type="text" id="planDay"/>
 								</div>
 							</c:forEach>
 						</div>

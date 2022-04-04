@@ -45,7 +45,7 @@ $(document).ready(function() {
 		
 		// 생성되어있는 event를 클릭했을 때 내용 (PlanMst 수정 or 삭제 및 PlanDt 조회하는 modal창 trigger)
 		eventClick: function(info) {
-		
+			
 			// info는 해당 이벤트가 가지고 있는 데이터 값
 			// event 블럭을 클릭하면 endDate를 캘린더에 표시된 날짜로 출력 (endDate.date - 1)
 			var eventEndDate = strToDate(info.event.endStr);
@@ -95,10 +95,8 @@ $(document).ready(function() {
 					$('.modal-body .detail-days').attr('data-count', info.event.extendedProps.dateCount);
 					$('#btn-detail').attr('href', '/init/plan/detail_modify?planNum=' + info.event.id);
 					// modal창에 ajax로 가져온 data를 활용하여 plan_dt list를 만들고 정보를 뿌려주는 메서드
-					modifyModal(data, Number(info.event.extendedProps.dateCount));			
-			
-					marker2(data);		
-					/*map.relayout();*/
+					modifyModal(data, Number(info.event.extendedProps.dateCount));
+								
 				},
 				error : function() {
 					alert('일시적인 오류로 수정에 실패하였습니다. 문제가 지속될 시 게시판으로 문의해주시면 감사하겠습니다.');
@@ -107,40 +105,128 @@ $(document).ready(function() {
 		}
 	});
 	
-	
-	function marker2(data){
+	var i=1;
+
+	$('#detailModal').on('shown.bs.modal', function() {
 		
 		var map = new kakao.maps.Map(document.getElementById('map'), { // 지도를 표시할 div
-				    center : new kakao.maps.LatLng(data[0].latitude, data[0].longitude), // 지도의 중심좌표 
-				    level : 3 // 지도의 확대 레벨 
-					});
+		    center : new kakao.maps.LatLng($('#latitude').val(), $('#longitude').val()), // 지도의 중심좌표 
+		    level : 3 // 지도의 확대 레벨 
+		});
 		
-		map.relayout();
+		var clusterer = new kakao.maps.MarkerClusterer({
+		    map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체 
+		    averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정 
+		    minLevel: 10, // 클러스터 할 최소 지도 레벨
+		    disableClickZoom: true, // 클러스터 마커를 클릭했을 때 지도가 확대 되도록 설정한다
+		    calculator: [10, 20, 30], // 클러스터의 크기 구분 값(10개, 20개, 30개 마다 다르게), 각 사이값마다 설정된 text나 style이 적용된다
+		    styles: [{ // calculator 각 사이 값 마다 적용될 스타일을 지정한다
+		        width : '30px', height : '30px',
+		        background: 'rgba(51, 204, 255, .8)',
+		        borderRadius: '15px',
+		        color: '#000',
+		        textAlign: 'center',
+		        fontWeight: 'bold',
+		        lineHeight: '31px'
+		    },
+		    {
+		        width : '40px', height : '40px',
+		        background: 'rgba(255, 153, 0, .8)',
+		        borderRadius: '20px',
+		        color: '#000',
+		        textAlign: 'center',
+		        fontWeight: 'bold',
+		        lineHeight: '41px'
+		    },
+		    {
+		        width : '50px', height : '50px',
+		        background: 'rgba(255, 51, 204, .8)',
+		        borderRadius: '25px',
+		        color: '#000',
+		        textAlign: 'center',
+		        fontWeight: 'bold',
+		        lineHeight: '51px'
+		    },
+		    {
+		        width : '60px', height : '60px',
+		        background: 'rgba(255, 80, 80, .8)',
+		        borderRadius: '30px',
+		        color: '#000',
+		        textAlign: 'center',
+		        fontWeight: 'bold',
+		        lineHeight: '61px'
+		    }
+			]
+		});
 		
-		var imageSrc = 'images/marker.png', // 마커이미지의 경로    
-	    imageSize = new kakao.maps.Size(50, 50), // 마커이미지의 크기입니다
-	    imageOption = {offset: new kakao.maps.Point(10, 50)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+		let polyline=[];
+		console.log(polyline);
 		
-		var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption); //마커 이미지 옵션을 markerImage객체에 담기
-		var polyline = [];
-		for (var i = 0; i < data.length; i++ ) {
-			var marker = new kakao.maps.Marker({  //반복문에서 생성하는 marker 객체를 markers에 추가
-	            map: map, // 마커를 표시할 지도
-	            position: new kakao.maps.LatLng(data[i].latitude, data[i].longitude), // 마커를 표시할 위치,
-				image: markerImage
-	        })
-			polyline.push(new kakao.maps.LatLng(data[i].latitude, data[i].longitude));
-			
-			var linePath = new kakao.maps.Polyline({
-				path : polyline,
-				strokeWeight : 3,
-				strokeColor : 'blue',
-				strokeStyle : 'solid'
-			});	
-		 }
-		linePath.setMap(map);
-	};
+		$('#mbtn').click(function(){
+			clusterer.clear(); //마커 제거
+			var value1 = 'planNum';
+			var value2 = $('#modal-planNum').val();
+			var value3 = 'planDay';
+			var value4 = $('#details'+i).children('div').children('#planDay').val();
 
+			console.log(value1 + "," + value2 + "," + value3 + "," + value4);
+			$.ajax({
+				url : 'filter',
+				type: 'get',
+				data: {"value1" : value1, "value2" : value2, "value3" : value3, "value4" : value4},
+				beforeSend: function(xhr){
+				   	var token = $("meta[name='_csrf']").attr('content');
+					var header = $("meta[name='_csrf_header']").attr('content');
+				        xhr.setRequestHeader(header, token);
+				},
+				success: function(data) {
+					
+					// 이동할 위도 경도 위치를 생성합니다 
+					var moveLatLon = new kakao.maps.LatLng(data[0].latitude, data[0].longitude);
+					// 지도 중심을 부드럽게 이동시킵니다
+					// 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
+					map.panTo(moveLatLon); 
+					           
+					var markers =[];
+					/*var polyline = [];*/
+					var imageSrc = 'images/marker.png', // 마커이미지의 경로    
+				    imageSize = new kakao.maps.Size(50, 50), // 마커이미지의 크기입니다
+				    imageOption = {offset: new kakao.maps.Point(10, 50)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+					
+					var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption); //마커 이미지 옵션을 markerImage객체에 담기	
+							
+					for (var i = 0; i < data.length; i++ ) {
+						
+						var marker = new kakao.maps.Marker({
+							map : map,  //반복문에서 생성하는 marker 객체를 markers에 추가
+							image: markerImage,
+				            position: new kakao.maps.LatLng(data[i].latitude, data[i].longitude) // 마커를 표시할 위치
+				        });
+
+						polyline.push(new kakao.maps.LatLng(data[i].latitude, data[i].longitude));
+						
+						var linePath = new kakao.maps.Polyline({
+							path : polyline,
+							strokeWeight : 3,
+							strokeColor : 'blue',
+							strokeStyle : 'solid'
+						});
+						markers.push(marker);
+															
+					 }
+
+				linePath.setMap(map);
+				clusterer.addMarkers(markers);			
+				},
+				error: function(data) {			
+				}
+			});		
+		});
+		
+		$('#mbtn').trigger('click');
+	
+	});
+	
 	// 캘린더를 만듦
 	calendar.render();	
 	// getAllPlans() 메서드 호출 : 모든 일정을 가져와서 이벤트 블럭을 생성
@@ -149,6 +235,7 @@ $(document).ready(function() {
 
 	// 일정 생성(Create 버튼 눌렀을 때)
 	$('#submit').click(function() {
+		
 		// 각각의 form에 입력된 값을 변수에 저장
 		var planName = $('#planName').val();
 		var startDate = $('#startDate').val();
@@ -177,6 +264,7 @@ $(document).ready(function() {
 	
 	// modal창에 상세일정 표시 부분에 previous 버튼 클릭 시
 	$('#prev-btn').click(function() {
+
 		// 버튼에 부여한 data-index 값(= .active인 탭 박스에 index - 1) 을 가져옴
 		var index = $(this).attr('data-index');
 		
@@ -197,10 +285,13 @@ $(document).ready(function() {
 			$(this).attr('data-index', Number(index)-1);
 			$('#next-btn').attr('data-index', Number(index)+1);
 		}
+		i--;
+		$('#mbtn').trigger('click');
 	});
 
 	// modal창에 상세일정 표시 부분에 next 버튼 클릭 시
 	$('#next-btn').click(function() {
+
 		// 버튼에 부여한 data-index 값(= .active인 탭 박스에 index - 1) 을 가져옴
 		var index = Number($(this).attr('data-index'));
 		
@@ -218,6 +309,8 @@ $(document).ready(function() {
 			$(this).attr('data-index', Number(index)+1);
 			$('#prev-btn').attr('data-index', Number(index)-1);
 		}
+		i++;
+		$('#mbtn').trigger('click');
 	});
 
 	// planMst 수정버튼 (modal창)	
@@ -409,9 +502,10 @@ $(document).ready(function() {
 	};
 	
 	
-	
+
 	// 이벤트 블럭 클릭하면 모달창에 정보 가져와서 tab menu 만드는 메서드
 	function modifyModal(data, dateCount) {
+		
 		// tab 박스의 부모 element가 될 위치를 선택
 		var target1 = $('.plan-details');
 		
@@ -453,18 +547,18 @@ $(document).ready(function() {
 					if ( data[j].endTime == null ) {
 						data[j].endTime = '- - : - - ';
 					}
-					
-					
-					
+							
 					// 각각의 위치에 텍스트 입력
 					target2.children('.planDt' + count).children('h4').text(data[j].placeName);
 					target2.children('.planDt' + count).children('.startTime').text('start : ' + data[j].startTime);
 					target2.children('.planDt' + count).children('.endTime').text('end : ' + data[j].endTime);
-					
+					target2.children('.planDt' + count).children('#latitude').val(data[j].latitude);
+					target2.children('.planDt' + count).children('#longitude').val(data[j].longitude);
+					target2.children('.planDt' + count).children('#planDay').val(data[j].planDay);
 					// 상세 일정 개수만큼 ++
 					count++;
 				}
-			}
+			}		
 		}
 	};
 
